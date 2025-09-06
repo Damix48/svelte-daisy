@@ -1,0 +1,226 @@
+@import "tailwindcss";
+/* @plugin '@tailwindcss/forms'; */
+/* @plugin '@tailwindcss/typography'; */
+
+@utility anchor-* {
+  anchor-name: --value([*]);
+}
+
+@utility position-anchor-* {
+  position-anchor: --value([*]);
+}
+
+@plugin "daisyui" {
+  exclude: rootscrollgutter;
+}
+
+@utility no-spinner {
+  /* Hide WebKit spin buttons */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Disable Firefox spinner styling */
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+@utility touch-hitbox {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    min-height: 44px;
+    min-width: 44px;
+    z-index: 9999;
+  }
+}
+
+@plugin "daisyui/theme" {
+  name: "corporate";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(93% 0 0);
+  --color-base-300: oklch(86% 0 0);
+  --color-base-content: oklch(22.389% 0.031 278.072);
+  --color-primary: oklch(58% 0.158 241.966);
+  --color-primary-content: oklch(100% 0 0);
+  --color-secondary: oklch(55% 0.046 257.417);
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(60% 0.118 184.704);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(0% 0 0);
+  --color-neutral-content: oklch(100% 0 0);
+  --color-info: oklch(60% 0.126 221.723);
+  --color-info-content: oklch(100% 0 0);
+  --color-success: oklch(62% 0.194 149.214);
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(85% 0.199 91.936);
+  --color-warning-content: oklch(0% 0 0);
+  --color-error: oklch(70% 0.191 22.216);
+  --color-error-content: oklch(0% 0 0);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 1;
+}
+
+@plugin "daisyui/theme" {
+  name: "corporate-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+
+  /* Base Colors (Backgrounds) - Softer dark gray tones */
+  --color-base-100: oklch(18% 0 0); /* Main background */
+  --color-base-200: oklch(26% 0 0); /* Secondary background */
+  --color-base-300: oklch(34% 0 0); /* Tertiary background */
+
+  /* Base Content (Text) */
+  --color-base-content: oklch(92% 0.031 278.072); /* Light but soft text */
+
+  /* Primary Color */
+  --color-primary: oklch(58% 0.158 241.966);
+  --color-primary-content: oklch(18% 0 0); /* Dark text on primary */
+
+  /* Secondary Color */
+  --color-secondary: oklch(55% 0.046 257.417);
+  --color-secondary-content: oklch(18% 0 0);
+
+  /* Accent Color */
+  --color-accent: oklch(60% 0.118 184.704);
+  --color-accent-content: oklch(18% 0 0);
+
+  /* Neutral Colors */
+  --color-neutral: oklch(85% 0 0); /* Light gray for neutral accents */
+  --color-neutral-content: oklch(18% 0 0); /* Dark text on neutral */
+
+  /* Status Colors */
+  --color-info: oklch(60% 0.126 221.723);
+  --color-info-content: oklch(18% 0 0);
+
+  --color-success: oklch(62% 0.194 149.214);
+  --color-success-content: oklch(18% 0 0);
+
+  --color-warning: oklch(85% 0.199 91.936);
+  --color-warning-content: oklch(18% 0 0);
+
+  --color-error: oklch(70% 0.191 22.216);
+  --color-error-content: oklch(18% 0 0);
+
+  /* Other Settings */
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 1;
+}
+
+.popover-dropdown {
+  @apply inline-block text-inherit;
+
+  z-index: 999;
+  animation: popover-dropdown 0.2s;
+  transition-property: opacity, scale, display;
+  transition-behavior: allow-discrete;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  @starting-style {
+    scale: 95%;
+    opacity: 0;
+  }
+
+  &:not(:popover-open) {
+    @apply hidden origin-top opacity-0;
+    scale: 95%;
+  }
+
+  /* POSITION SUPPORTING ANCHOR */
+  @supports (position-area: bottom) {
+    position: fixed;
+    inset: unset;
+    position-area: bottom span-right;
+    position-try: flip-block, flip-inline;
+
+    &.popover-dropdown-center {
+      position-area: bottom;
+      position-try:
+        flip-block,
+        flip-inline,
+        bottom span-left,
+        bottom span-right,
+        top span-left,
+        top span-right;
+    }
+  }
+
+  /* POSITION SUPPORTING NOT SUPPORTING ANCHOR */
+  @supports not (position-area: bottom) {
+    inset: unset;
+    position: absolute;
+
+    top: anchor(bottom);
+    left: anchor(left);
+
+    position-try: --bottom-span-left, --top-span-right, --top-span-left;
+
+    @position-try --bottom-span-left {
+      top: anchor(bottom);
+      right: anchor(right);
+
+      bottom: auto;
+      left: auto;
+    }
+
+    @position-try --top-span-right {
+      bottom: anchor(top);
+      left: anchor(left);
+
+      top: auto;
+      right: auto;
+    }
+
+    @position-try --top-span-left {
+      bottom: anchor(top);
+      right: anchor(right);
+
+      top: auto;
+      left: auto;
+    }
+  }
+
+  /* AUTOWIDTH */
+  @supports (width: anchor-size(width)) {
+    &.popover-dropdown-auto-size {
+      width: anchor-size(width);
+    }
+  }
+}
+
+@keyframes popover-dropdown {
+  0% {
+    opacity: 0;
+  }
+}
+
+.modal {
+  scrollbar-gutter: auto;
+}

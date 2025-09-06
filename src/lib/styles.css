@@ -1,0 +1,131 @@
+@utility anchor-* {
+  anchor-name: --value([*]);
+}
+
+@utility position-anchor-* {
+  position-anchor: --value([*]);
+}
+
+@utility no-spinner {
+  /* Hide WebKit spin buttons */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Disable Firefox spinner styling */
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+@utility touch-hitbox {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    min-height: 44px;
+    min-width: 44px;
+    z-index: 9999;
+  }
+}
+
+.popover-dropdown {
+  @apply inline-block text-inherit;
+
+  z-index: 999;
+  animation: popover-dropdown 0.2s;
+  transition-property: opacity, scale, display;
+  transition-behavior: allow-discrete;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  @starting-style {
+    scale: 95%;
+    opacity: 0;
+  }
+
+  &:not(:popover-open) {
+    @apply hidden origin-top opacity-0;
+    scale: 95%;
+  }
+
+  /* POSITION SUPPORTING ANCHOR */
+  @supports (position-area: bottom) {
+    position: fixed;
+    inset: unset;
+    position-area: bottom span-right;
+    position-try: flip-block, flip-inline;
+
+    &.popover-dropdown-center {
+      position-area: bottom;
+      position-try:
+        flip-block,
+        flip-inline,
+        bottom span-left,
+        bottom span-right,
+        top span-left,
+        top span-right;
+    }
+  }
+
+  /* POSITION SUPPORTING NOT SUPPORTING ANCHOR */
+  @supports not (position-area: bottom) {
+    inset: unset;
+    position: absolute;
+
+    top: anchor(bottom);
+    left: anchor(left);
+
+    position-try: --bottom-span-left, --top-span-right, --top-span-left;
+
+    @position-try --bottom-span-left {
+      top: anchor(bottom);
+      right: anchor(right);
+
+      bottom: auto;
+      left: auto;
+    }
+
+    @position-try --top-span-right {
+      bottom: anchor(top);
+      left: anchor(left);
+
+      top: auto;
+      right: auto;
+    }
+
+    @position-try --top-span-left {
+      bottom: anchor(top);
+      right: anchor(right);
+
+      top: auto;
+      left: auto;
+    }
+  }
+
+  /* AUTOWIDTH */
+  @supports (width: anchor-size(width)) {
+    &.popover-dropdown-auto-size {
+      width: anchor-size(width);
+    }
+  }
+}
+
+@keyframes popover-dropdown {
+  0% {
+    opacity: 0;
+  }
+}
+
+.validator {
+  &.valid {
+    --input-color: var(--color-success);
+  }
+}
