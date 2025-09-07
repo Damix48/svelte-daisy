@@ -28,6 +28,22 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "svelte": "./dist/components/index.js"
+    },
+    "./services": {
+      "types": "./dist/services/index.d.ts",
+      "svelte": "./dist/services/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "svelte": "./dist/types/index.js"
+    },
+    "./contexts": {
+      "types": "./dist/contexts/index.d.ts",
+      "svelte": "./dist/contexts/index.js"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "peerDependencies": {
@@ -57,7 +73,6 @@
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.42.0",
-    "valibot": "^1.1.0",
     "vite": "^7.1.4",
     "vite-plugin-devtools-json": "^1.0.0"
   },
