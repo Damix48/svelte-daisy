@@ -28,5 +28,5 @@
   {..._restProps}
   aria-invalid={$errors[name] && $errors[name][0] !== undefined ? "true" : undefined}
   bind:selectedItem={() => items?.find((x) => itemToId!(x) === $form[name]), (v) => ($form[name] = itemToId!(v!))}
-  bind:selectedItems={() => items?.filter((x) => $form[name].includes(itemToId!(x))), (v) => ($form[name] = v?.map((x) => itemToId!(x)))}
+  bind:selectedItems={() => items?.filter((x) => $form[name]?.includes(itemToId!(x))), (v) => ($form[name] = v?.map((x) => itemToId!(x)))}
 />
