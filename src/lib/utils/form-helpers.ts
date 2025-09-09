@@ -1,7 +1,19 @@
 import { setError, type SuperValidated } from "sveltekit-superforms";
 import { toCamelCase } from "./casing";
 import { keyof, type ErrorMessage, type ObjectEntries, type ObjectIssue, type ObjectSchema } from "valibot";
-import type { HttpValidationProblemDetails } from "$lib/api/schema";
+import { type ZodObject, type ZodRawShape } from "zod";
+
+type HttpValidationProblemDetails = {
+  type?: string;
+  title?: string;
+  /** Format: int32 */
+  status?: number;
+  detail?: string;
+  instance?: string;
+  errors?: {
+    [key: string]: string[];
+  };
+};
 
 export function handleApiErrors<A extends ObjectEntries, B extends ErrorMessage<ObjectIssue> | undefined>(
   form: SuperValidated<Record<string, unknown>>,
@@ -13,6 +25,18 @@ export function handleApiErrors<A extends ObjectEntries, B extends ErrorMessage<
     const isKey = (value: string): value is (typeof keys)[number] => keys.includes(value);
     const errorKey = toCamelCase(key);
     if (isKey(errorKey)) {
+      setError(form, errorKey, error.errors[key] ?? []);
+    } else {
+      setError(form, error.errors[key] ?? "Unknown error");
+    }
+  }
+}
+
+export function handleApiErrorsZod<T extends ZodRawShape>(form: SuperValidated<Record<string, unknown>>, schema: ZodObject<T>, error: HttpValidationProblemDetails) {
+  for (const key in error.errors) {
+    const keys = Object.keys(schema.shape);
+    const errorKey = toCamelCase(key);
+    if (keys.includes(errorKey)) {
       setError(form, errorKey, error.errors[key] ?? []);
     } else {
       setError(form, error.errors[key] ?? "Unknown error");

@@ -3,6 +3,7 @@
   import { useInterval } from "runed";
   import type { HTMLInputAttributes } from "svelte/elements";
   import type { InputNumberProps } from "./types";
+  import { invalidate } from "$app/navigation";
 
   let {
     value = $bindable(undefined),
@@ -62,7 +63,7 @@
   let displayValue: string | undefined = $state(undefined);
 </script>
 
-<label class="input {className}">
+<label class="input {className}" aria-invalid={restProps["aria-invalid"]}>
   <button class="label touch-hitbox !h-full transition-all {atMin ? 'bg-base-200 opacity-50' : ''}" onclick={decrease} disabled={atMin} type="button" aria-label="Decrease value">
     <Minus size={12} />
   </button>

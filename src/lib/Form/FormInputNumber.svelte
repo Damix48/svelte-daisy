@@ -13,7 +13,7 @@
   let { ...restProps }: FormInputNumberProps & Omit<HTMLInputAttributes, "id" | "name" | "value" | "type"> = $props();
 
   restProps = mergeProps($constraints[name] ?? {}, restProps, {
-    class: "input validator w-full"
+    class: "validator w-full"
   });
 </script>
 
