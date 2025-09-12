@@ -8,3 +8,4 @@ export { default as Select } from "../Select/Select.svelte";
 export { default as ModalProvider } from "../ModalProvider.svelte";
 export { default as ViewTransition } from "../ViewTransition.svelte";
 export { default as Toaster } from "../Toaster.svelte";
+export { default as TreeSelect } from "../TreeSelect/TreeSelect.svelte";
