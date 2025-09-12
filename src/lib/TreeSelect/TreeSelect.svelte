@@ -350,11 +350,16 @@
             style="padding-left: {node.level * 1.5 + 0.375}rem;"
           >
             {#if node.hasChildren}
-              <button class="btn btn-square btn-ghost btn-xs touch-hitbox" aria-label={isExpanded ? "Collapse" : "Expand"} onclick={(e) => toggleExpand(e, itemToId(node.item))}>
+              <button
+                type="button"
+                class="btn btn-square btn-ghost btn-xs touch-hitbox"
+                aria-label={isExpanded ? "Collapse" : "Expand"}
+                onclick={(e) => toggleExpand(e, itemToId(node.item))}
+              >
                 <ChevronRight size={12} class="transition-transform duration-200 {isExpanded ? 'rotate-90' : ''}" />
               </button>
             {:else}
-              <button class="btn btn-square btn-ghost btn-xs invisible">a</button>
+              <button type="button" class="btn btn-square btn-ghost btn-xs invisible"></button>
             {/if}
 
             {#if itemTemplate}
