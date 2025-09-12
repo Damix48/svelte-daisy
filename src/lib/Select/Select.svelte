@@ -1,9 +1,8 @@
 <script lang="ts" generics="TItem">
-  import type { Snippet } from "svelte";
   import { Dropdown } from "../Dropdown";
-  import { Check, ChevronsUpDown, CircleSmall, Dot, Plus, Search } from "@lucide/svelte";
+  import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
   import type { SelectProps } from "./types";
-  import type { HTMLButtonAttributes, HTMLInputAttributes } from "svelte/elements";
+  import type { HTMLInputAttributes } from "svelte/elements";
 
   let {
     type = "single",
@@ -108,7 +107,11 @@
       }
       case "Enter": {
         if (highlightedIndex !== -1) {
-          highlightedIndex === filteredItems.length ? handleCreate() : handleClick(filteredItems[highlightedIndex]);
+          if (highlightedIndex === filteredItems.length) {
+            handleCreate();
+          } else {
+            handleClick(filteredItems[highlightedIndex]);
+          }
           e.preventDefault();
         }
         break;
@@ -147,7 +150,7 @@
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
         <Search size={16} class="shrink-0 text-[var(--input-color)]" />
         <input type="search" bind:this={searchBox} class="grow" placeholder="Search" bind:value={searchTerm} onkeydown={handleKeyDown} />
-        {#if canCreate}
+        {#if canCreate && false}
           <button type="button" class="btn btn-xs">Add new</button>
         {/if}
       </label>
@@ -174,7 +177,11 @@
             {#if itemTemplate}
               {@render itemTemplate(item, isSelected)}
             {:else}
-              <Check size={12} opacity={isSelected ? 1 : 0} class="transition-opacity" />
+              {#if type === "multiple"}
+                <input type="checkbox" checked={isSelected} class="checkbox checkbox-sm" />
+              {:else}
+                <Check size={12} opacity={isSelected ? 1 : 0} class="transition-opacity" />
+              {/if}
               <span>
                 {itemToString(item)}
               </span>
