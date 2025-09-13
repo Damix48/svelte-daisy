@@ -239,8 +239,7 @@
     highlightedIndex = displayItems.findIndex((d) => itemToId(d.item) === id);
   }
 
-  function toggleExpand(e: MouseEvent, id: string | number) {
-    e.stopPropagation(); // Prevent item from being selected
+  function toggleExpand(id: string | number) {
     if (expandedIds.has(id)) {
       expandedIds.delete(id);
     } else {
@@ -350,16 +349,18 @@
             style="padding-left: {node.level * 1.5 + 0.375}rem;"
           >
             {#if node.hasChildren}
-              <button
-                type="button"
+              <span
+                role="button"
+                tabindex="0"
                 class="btn btn-square btn-ghost btn-xs touch-hitbox"
                 aria-label={isExpanded ? "Collapse" : "Expand"}
-                onclick={(e) => toggleExpand(e, itemToId(node.item))}
+                onclick={() => toggleExpand(itemToId(node.item))}
+                onkeypress={() => toggleExpand(itemToId(node.item))}
               >
                 <ChevronRight size={12} class="transition-transform duration-200 {isExpanded ? 'rotate-90' : ''}" />
-              </button>
+              </span>
             {:else}
-              <button type="button" class="btn btn-square btn-ghost btn-xs invisible"></button>
+              <span class="btn btn-square btn-ghost btn-xs invisible"></span>
             {/if}
 
             {#if itemTemplate}
