@@ -3,6 +3,7 @@
   import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
   import { SvelteMap, SvelteSet } from "svelte/reactivity";
   import type { TreeSelectProps } from "./types";
+  import { onMount } from "svelte";
 
   type SelectionState = "none" | "some" | "all";
   type DisplayItem = {
@@ -23,9 +24,18 @@
     itemTemplate,
     selectedItem = $bindable(),
     selectedItems = $bindable([]),
+    selectedIds = $bindable([]),
     onCreate,
     ...restProps
   }: TreeSelectProps<TItem> = $props();
+
+  onMount(() => {
+    if (selectedIds.length > 0) {
+      selectedItems = flattenTree(items, 0, true)
+        .filter((x) => selectedIds.includes(itemToId(x.item)))
+        .map((x) => x.item);
+    }
+  });
 
   let searchTerm = $state("");
   let open = $state(false);
@@ -45,7 +55,7 @@
     }
   });
 
-  const selectedIds = $derived.by(() => {
+  const internalSelectedIds = $derived.by(() => {
     if (type === "single") {
       return new Set(selectedItem ? [itemToId(selectedItem)] : []);
     }
@@ -56,7 +66,7 @@
     const states = new SvelteMap<string | number, SelectionState>();
     if (type !== "multiple" || !cascadeSelection) return states;
 
-    const selectedIdSet = selectedIds;
+    const selectedIdSet = internalSelectedIds;
 
     function traverse(nodes: TItem[]): void {
       for (const item of nodes) {
@@ -106,12 +116,12 @@
   // --- Core Tree Logic ---
 
   /** Recursively flattens the tree for display, respecting expanded state */
-  function flattenTree(nodes: TItem[], level = 0): DisplayItem[] {
+  function flattenTree(nodes: TItem[], level = 0, ignoreExpanded = false): DisplayItem[] {
     const result: DisplayItem[] = [];
     for (const item of nodes) {
       const hasChildren = !!(item.children && item.children.length > 0);
       result.push({ item, level, hasChildren });
-      if (hasChildren && expandedIds.has(itemToId(item))) {
+      if (hasChildren && (expandedIds.has(itemToId(item)) || ignoreExpanded)) {
         result.push(...flattenTree(item.children!, level + 1));
       }
     }
@@ -186,7 +196,7 @@
       // Multiple selection mode
       if (!cascadeSelection) {
         // Non-cascade mode: simple toggle
-        const isSelected = selectedIds.has(id);
+        const isSelected = internalSelectedIds.has(id);
         if (isSelected) {
           selectedItems = selectedItems.filter((i) => itemToId(i) !== id);
         } else {
@@ -239,7 +249,9 @@
     highlightedIndex = displayItems.findIndex((d) => itemToId(d.item) === id);
   }
 
-  function toggleExpand(id: string | number) {
+  function toggleExpand(e: MouseEvent | KeyboardEvent, id: string | number) {
+    e.stopPropagation(); // Prevent item from being selected
+
     if (expandedIds.has(id)) {
       expandedIds.delete(id);
     } else {
@@ -302,6 +314,10 @@
   }
 
   let canCreate = $derived(createable && searchTerm && displayItems.every((x) => itemToString(x.item).trim() !== searchTerm.trim()));
+
+  $effect(() => {
+    selectedIds = [...internalSelectedIds];
+  });
 </script>
 
 <Dropdown.Root {...restProps} bind:open>
@@ -336,7 +352,7 @@
       aria-multiselectable={type === "multiple"}
     >
       {#each displayItems as node, i (itemToId(node.item))}
-        {@const isSelected = selectedIds.has(itemToId(node.item))}
+        {@const isSelected = internalSelectedIds.has(itemToId(node.item))}
         {@const isExpanded = expandedIds.has(itemToId(node.item))}
         {@const state = (cascadeSelection && selectionStates.get(itemToId(node.item))) || (isSelected ? "all" : "none")}
 
@@ -354,8 +370,8 @@
                 tabindex="0"
                 class="btn btn-square btn-ghost btn-xs touch-hitbox"
                 aria-label={isExpanded ? "Collapse" : "Expand"}
-                onclick={() => toggleExpand(itemToId(node.item))}
-                onkeypress={() => toggleExpand(itemToId(node.item))}
+                onclick={(e) => toggleExpand(e, itemToId(node.item))}
+                onkeypress={(e) => toggleExpand(e, itemToId(node.item))}
               >
                 <ChevronRight size={12} class="transition-transform duration-200 {isExpanded ? 'rotate-90' : ''}" />
               </span>

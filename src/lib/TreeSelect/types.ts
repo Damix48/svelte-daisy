@@ -12,5 +12,6 @@ export type TreeSelectProps<TItem> = {
   itemTemplate?: Snippet<[TItem, boolean]> | undefined;
   selectedItem?: TItem | undefined;
   selectedItems?: TItem[];
+  selectedIds?: (string | number)[];
   onCreate?: (value: string) => void;
 };
