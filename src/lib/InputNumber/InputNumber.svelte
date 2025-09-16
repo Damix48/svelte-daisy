@@ -63,7 +63,7 @@
   let displayValue: string | undefined = $state(undefined);
 </script>
 
-<label class="input {className}" aria-invalid={restProps["aria-invalid"]}>
+<label class="input input-number {className}" aria-invalid={restProps["aria-invalid"]}>
   <button class="label touch-hitbox !h-full transition-all {atMin ? 'bg-base-200 opacity-50' : ''}" onclick={decrease} disabled={atMin} type="button" aria-label="Decrease value">
     <Minus size={12} />
   </button>

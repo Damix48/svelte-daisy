@@ -186,6 +186,10 @@
   & .label:nth-child(3) {
     @apply ms-0;
   }
+
+  & input {
+    @apply w-6 text-center font-black;
+  }
 }
 
 .dots {
