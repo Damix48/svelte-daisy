@@ -1,6 +1,7 @@
 export { Modal } from "../Modal";
 export { Form } from "../Form";
 export { Dropdown } from "../Dropdown";
+export { Sortable } from "../Sortable";
 
 export { default as ConfirmModal } from "../ConfirmModal.svelte";
 export { default as InputNumber } from "../InputNumber/InputNumber.svelte";
