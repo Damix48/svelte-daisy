@@ -50,8 +50,6 @@
   };
 </script>
 
-{JSON.stringify(items)}
-
 <div bind:this={div} {...restProp} data-sortable-list-id={id}>
   {@render children?.()}
 </div>
