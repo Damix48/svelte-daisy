@@ -104,6 +104,40 @@
     return states;
   });
 
+  function getAncestorIds(childId: string | number, nodes: TItem[]): (string | number)[] {
+    /**
+     * Inner recursive function to find the path to the target ID.
+     * @returns The path of ancestor IDs if the target is found, otherwise null.
+     */
+    function findPath(targetId: string | number, currentNodes: TItem[], currentPath: (string | number)[]): (string | number)[] | null {
+      for (const node of currentNodes) {
+        const nodeId = itemToId(node);
+
+        // If the current node is the target, we've found our path.
+        if (nodeId === targetId) {
+          return currentPath;
+        }
+
+        // If the node has children, search deeper.
+        if (node.children && node.children.length > 0) {
+          const newPath = [...currentPath, nodeId];
+          const result = findPath(targetId, node.children, newPath);
+
+          // If the target was found in a child branch, return the result.
+          if (result !== null) {
+            return result;
+          }
+        }
+      }
+
+      // Target was not found in this branch of the tree.
+      return null;
+    }
+
+    // Start the search from the root of the tree.
+    return findPath(childId, nodes, []) || [];
+  }
+
   const triggerLabel = $derived.by(() => {
     if (type === "single") {
       return selectedItem ? itemToString(selectedItem) : placeholder;
@@ -206,41 +240,35 @@
         // Cascade mode: handle parent and children together
         const currentState = selectionStates.get(id) || "none";
 
-        // Get all items that need to be toggled (self + descendants)
-        const descendantIds = node.hasChildren ? getAllDescendantIds(item) : [];
-        const allIds = [id, ...descendantIds];
-
         if (currentState === "all") {
-          // Currently all selected -> deselect all
-          const idsToRemove = new Set(allIds);
+          // Currently all selected -> deselect this item, its descendants, AND its ancestors.
+          const descendantIds = node.hasChildren ? getAllDescendantIds(item) : [];
+          const selfAndDescendants = [id, ...descendantIds];
+          const ancestorIds = getAncestorIds(id, items);
+
+          const idsToRemove = new Set([...selfAndDescendants, ...ancestorIds]);
           selectedItems = selectedItems.filter((i) => !idsToRemove.has(itemToId(i)));
         } else {
           // Currently "none" or "some" -> select all
+          const descendantIds = node.hasChildren ? getAllDescendantIds(item) : [];
+          const allIdsToSelect = new Set([id, ...descendantIds]);
           const currentIds = new Set(selectedItems.map(itemToId));
           const itemsToAdd: TItem[] = [];
 
-          // Add the parent itself if not already selected
-          if (!currentIds.has(id)) {
-            itemsToAdd.push(item);
-          }
-
-          // Find and add all descendant items that aren't already selected
-          function findItems(nodes: TItem[], idsToFind: Set<string | number>) {
+          // Find all items (self + descendants) that are not already selected
+          function findItems(nodes: TItem[]) {
             for (const n of nodes) {
               const nId = itemToId(n);
-              if (nId !== id && idsToFind.has(nId) && !currentIds.has(nId)) {
+              if (allIdsToSelect.has(nId) && !currentIds.has(nId)) {
                 itemsToAdd.push(n);
               }
               if (n.children) {
-                findItems(n.children, idsToFind);
+                findItems(n.children);
               }
             }
           }
 
-          if (descendantIds.length > 0) {
-            findItems(items, new Set(descendantIds));
-          }
-
+          findItems(items);
           selectedItems = [...selectedItems, ...itemsToAdd];
         }
       }
