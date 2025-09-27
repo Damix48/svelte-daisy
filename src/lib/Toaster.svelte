@@ -13,7 +13,8 @@
       error: "alert-error",
       title: "font-bold",
       description: "text-xs",
-      closeButton: "absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 focus:active:-translate-y-1/2 btn btn-neutral btn-xs btn-circle",
+      closeButton:
+        "absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 focus:active:-translate-y-1/2 active:!-translate-y-1/2 focus:!-translate-y-1/2 btn btn-neutral btn-xs btn-circle",
       loader: "!static !transform-none data-[visible=false]:hidden",
       actionButton: "btn btn-xs"
     },
