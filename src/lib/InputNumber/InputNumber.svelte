@@ -95,7 +95,7 @@
     bind:focused
     aria-label={label ? undefined : "Value"}
   />
-  <button class="label !h-full transition-all {atMax ? 'bg-base-200 opacity-50' : ''}" onclick={increase} disabled={atMax} type="button" aria-label="Increase value">
+  <button class="label touch-hitbox !h-full transition-all {atMax ? 'bg-base-200 opacity-50' : ''}" onclick={increase} disabled={atMax} type="button" aria-label="Increase value">
     <Plus size={12} />
   </button>
 </label>
