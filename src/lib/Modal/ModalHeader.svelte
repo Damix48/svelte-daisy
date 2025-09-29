@@ -15,7 +15,7 @@
 </script>
 
 <div {...restProps}>
-  <h3 class="text-lg font-bold">
+  <h3 class="text-xl font-bold">
     {@render children?.()}
   </h3>
 </div>
