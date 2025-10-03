@@ -7,6 +7,7 @@
   let {
     type = "single",
     searchable = true,
+    keepSearchTermOnClose = false,
     createable = false,
     items = [],
     placeholder = "Select an option",
@@ -35,6 +36,7 @@
     if (open) {
       searchBox?.focus();
       highlightedIndex = -1;
+      if (!keepSearchTermOnClose) searchTerm = "";
     }
   });
 
@@ -100,7 +102,7 @@
         break;
       }
       case "ArrowUp": {
-        highlightedIndex = (highlightedIndex - 1 + length) % length;
+        highlightedIndex = (Math.max(highlightedIndex, 0) - 1 + length) % length;
 
         e.preventDefault();
         break;

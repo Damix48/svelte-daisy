@@ -3,6 +3,7 @@ import type { Snippet } from "svelte";
 export type SelectProps<TItem> = {
   type?: "single" | "multiple";
   searchable?: boolean;
+  keepSearchTermOnClose?: boolean;
   createable?: boolean;
   items?: TItem[];
   placeholder?: string;
