@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { Modal } from "./Modal";
-  import { context } from "./Modal/context";
+  import { Modal, useModal } from "$lib/components/ui/modal";
 
-  const c = context.get();
+  const c = useModal();
 
   type ConfirmModalProps = {
     title: string;

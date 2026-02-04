@@ -11,3 +11,5 @@ export const Modal = {
   Header,
   Footer
 };
+
+export { useModal } from "./context";

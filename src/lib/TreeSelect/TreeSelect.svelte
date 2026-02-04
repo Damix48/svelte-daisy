@@ -1,5 +1,5 @@
 <script lang="ts" generics="TItem extends { children?: TItem[] }">
-  import { Dropdown } from "../Dropdown";
+  import { Dropdown } from "../components";
   import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
   import { SvelteMap, SvelteSet } from "svelte/reactivity";
   import type { TreeSelectProps } from "./types";

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { modalService } from "$lib/services/modal.svelte";
-  import { Modal } from "./Modal";
+  import { Modal } from "$lib/components/ui/modal";
 </script>
 
 {#each modalService.instances as instance (instance.id)}

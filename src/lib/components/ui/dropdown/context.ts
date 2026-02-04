@@ -6,3 +6,7 @@ type DropdownContext = {
 };
 
 export const context = new Context<DropdownContext>("dropdown-context");
+
+export const useDropdown = () => {
+  return context.get();
+};

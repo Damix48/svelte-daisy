@@ -50,7 +50,7 @@ const close = (id: string) => {
   }, modal.destroyDelay);
 };
 
-import ConfirmModal from "../ConfirmModal.svelte";
+import { ConfirmModal } from "$lib/components/functional/confirm-modal";
 
 const confirm = (title: string, text?: string, { cancelText, confirmText }: { cancelText?: string; confirmText?: string } = {}) => {
   return open(

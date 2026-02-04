@@ -5,3 +5,7 @@ type ModalContext = {
 };
 
 export const context = new Context<ModalContext>("modal-context");
+
+export const useModal = () => {
+  return context.get();
+};

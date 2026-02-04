@@ -7,3 +7,5 @@ export const Dropdown = {
   Trigger,
   Content
 };
+
+export { useDropdown } from "./context";
