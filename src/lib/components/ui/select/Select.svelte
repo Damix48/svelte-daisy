@@ -1,5 +1,5 @@
 <script lang="ts" generics="TItem">
-  import { Dropdown } from "../Dropdown";
+  import { Dropdown } from "../dropdown";
   import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
   import type { SelectProps } from "./types";
   import type { HTMLInputAttributes } from "svelte/elements";
