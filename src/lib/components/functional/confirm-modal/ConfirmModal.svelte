@@ -25,11 +25,13 @@
 <Modal.Header>
   {title}
 </Modal.Header>
-{#if text}
-  <p class="mb-4">
-    {text}
-  </p>
-{/if}
+<Modal.Body>
+  {#if text}
+    <p class="mb-4">
+      {text}
+    </p>
+  {/if}
+</Modal.Body>
 <Modal.Footer>
   <button
     class="btn"

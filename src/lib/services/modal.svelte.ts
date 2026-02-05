@@ -4,6 +4,7 @@ import { SvelteMap } from "svelte/reactivity";
 
 type ModalInstance<T extends Component<any, any, any>> = {
   id: string;
+  className?: string;
   component: T;
   props: ComponentProps<T>;
   destroyDelay: number;
@@ -18,7 +19,7 @@ const instances = new SvelteMap<string, ModalInstance<Component<any, any, any>>>
 const open = <T extends Component<ComponentProps<T>, any, any>>(
   component: T,
   props: Omit<ComponentProps<T>, "onClose">,
-  { destroyDelay }: { destroyDelay: number } = { destroyDelay: 250 }
+  { className, destroyDelay }: { className?: string; destroyDelay: number } = { destroyDelay: 250 }
 ) => {
   const id = useId();
 
@@ -31,7 +32,7 @@ const open = <T extends Component<ComponentProps<T>, any, any>>(
 
       resolve(result);
     };
-    const modal: ModalInstance<T> = { id, component, props: { ...props, onClose } as ComponentProps<T>, destroyDelay, resolve, resolveHandled: false };
+    const modal: ModalInstance<T> = { id, className, component, props: { ...props, onClose } as ComponentProps<T>, destroyDelay, resolve, resolveHandled: false };
 
     instances.set(id, modal);
   });
