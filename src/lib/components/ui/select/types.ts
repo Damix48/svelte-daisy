@@ -1,4 +1,5 @@
 import type { Snippet } from "svelte";
+import type { Booleanish } from "svelte/elements";
 
 export type SelectSelectionMode = "single" | "multiple";
 export type SelectBindingType = "item" | "id";
@@ -7,7 +8,7 @@ type SelectCommon<TItem> = {
   searchable?: boolean;
   createable?: boolean;
   keepSearchTermOnClose?: boolean;
-  allowDeselect?: boolean;
+  allowDeselect?: Booleanish;
   items?: TItem[];
   placeholder?: string;
   itemToString?: (item: TItem) => string;
