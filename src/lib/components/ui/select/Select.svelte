@@ -1,132 +1,172 @@
 <script lang="ts" generics="TItem">
-  import { Dropdown } from "../dropdown";
-  import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
-  import type { SelectProps } from "./types";
-  import type { HTMLInputAttributes } from "svelte/elements";
+import { Dropdown } from "../dropdown";
+import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
+import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
+import type { HTMLInputAttributes } from "svelte/elements";
 
-  let {
-    type = "single",
-    searchable = true,
-    keepSearchTermOnClose = false,
-    createable = false,
-    items = [],
-    placeholder = "Select an option",
-    itemToString = (item: TItem) => (item == null ? "" : String(item)),
-    itemToId = (item: TItem) => (item == null ? "" : String(item)),
-    itemTemplate,
-    selectedItem = $bindable(),
-    selectedItems = $bindable([]),
-    onCreate,
-    ...restProps
-  }: SelectProps<TItem> & Omit<HTMLInputAttributes, "id" | "value" | "type"> = $props();
+let {
+  type = "single",
+  bindingType = "item",
+  selected = $bindable(),
+  searchable = true,
+  createable = false,
+  keepSearchTermOnClose = false,
+  allowDeselect = false,
+  items = [],
+  placeholder = "Select an option",
+  itemToString = (item: TItem) => (item == null ? "" : String(item)),
+  itemToId = (item: TItem) => (item == null ? "" : String(item)),
+  itemTemplate,
+  onCreate,
+  ...restProps
+}: SelectProps<TItem> & Omit<HTMLInputAttributes, "id" | "value" | "type"> = $props();
 
-  let searchTerm = $state("");
-  let open = $state(false);
+let searchTerm = $state("");
+let open = $state(false);
 
-  let searchBox: HTMLInputElement | undefined = $state(undefined);
-  let highlightedIndex = $state(-1);
+let searchBox: HTMLInputElement | undefined = $state(undefined);
+let highlightedIndex = $state(-1);
 
-  let listboxItem: HTMLUListElement;
-  let itemElements: HTMLLIElement[] = $state([]);
+let listboxItem: HTMLUListElement;
+let itemElements: HTMLLIElement[] = $state([]);
 
-  const id = $props.id();
-  const listboxId = `listbox-${id}`;
+const id = $props.id();
+const listboxId = `listbox-${id}`;
 
-  $effect(() => {
-    if (open) {
-      searchBox?.focus();
-      highlightedIndex = -1;
-      if (!keepSearchTermOnClose) searchTerm = "";
+const itemsMap = $derived(new Map(items.map((i) => [itemToId(i), i])));
+
+const selectedItems = $derived.by((): TItem[] => {
+  if (selected === undefined || selected === null) return [];
+
+  if (type === "multiple") {
+    if (!Array.isArray(selected)) return []; // Safety check
+
+    if (bindingType === "item") {
+      return selected as TItem[];
+    } else if (bindingType === "id") {
+      return (selected as (string | number)[]).map((id) => itemsMap.get(id)).filter((i) => i !== undefined) as TItem[];
     }
-  });
-
-  const selectedIds = $derived.by(() => {
-    if (type === "single") {
-      return new Set(selectedItem ? [itemToId(selectedItem)] : []);
-    } else if (type === "multiple") {
-      return new Set(selectedItems.map(itemToId));
+  } else if (type === "single") {
+    if (bindingType === "item") {
+      return [selected as TItem];
+    } else {      
+      const item = itemsMap.get(selected as string | number);
+      return item ? [item] : [];
     }
-
-    return new Set([]);
-  });
-
-  // Create a derived value for the text to display in the trigger
-  const triggerLabel = $derived.by(() => {
-    if (type === "single") {
-      return selectedItem ? itemToString(selectedItem) : placeholder;
-    } else if (type === "multiple") {
-      if (selectedItems.length === 0) return placeholder;
-      if (selectedItems.length === 1) return itemToString(selectedItems[0]);
-      return `(${selectedItems.length} items) ${selectedItems.map(itemToString).join(", ")}`;
-    }
-  });
-
-  const filteredItems = $derived.by(() => {
-    if (!searchable || !searchTerm) return items;
-
-    return items.filter((item) => itemToString(item).trim().toLowerCase().includes(searchTerm.trim().toLowerCase()));
-  });
-
-  function handleClick(item: TItem) {
-    if (type === "single") {
-      selectedItem = item;
-      open = false;
-    } else if (type === "multiple") {
-      const itemId = itemToId(item);
-      if (selectedIds.has(itemId)) {
-        selectedItems = selectedItems.filter((i) => itemToId(i) !== itemId);
-      } else {
-        selectedItems = [...selectedItems, item];
-      }
-    }
-
-    highlightedIndex = filteredItems.findIndex((i) => itemToId(i) === itemToId(item));
   }
 
-  function handleCreate() {
-    if (!canCreate) return;
-    onCreate?.(searchTerm);
+  return [];
+});
+
+const selectedIds = $derived(new Set(selectedItems.map(itemToId)));
+
+const filteredItems = $derived.by(() => {
+  if (!searchable || !searchTerm) return items;
+
+  const lowerTerm = searchTerm.trim().toLowerCase();
+
+  return items.filter((item) => itemToString(item).trim().toLowerCase().includes(lowerTerm));
+});
+
+// Create a derived value for the text to display in the trigger
+const triggerLabel = $derived.by(() => {
+  if (selectedItems.length === 0) return placeholder;
+  if (selectedItems.length === 1) return itemToString(selectedItems[0]);
+  return `(${selectedItems.length} items) ${selectedItems.map(itemToString).join(", ")}`;
+});
+
+function handleClick(item: TItem) {
+  const itemId = itemToId(item);
+  const itemValue = bindingType === "item" ? item : itemId;
+
+  if (type === "single") {
+    const isAlreadySelected = selectedIds.has(itemId);
+
+    if (isAlreadySelected && allowDeselect) {
+      selected = undefined; 
+    } else {
+      selected = itemValue; 
+    }
+    
     open = false;
-  }
+  } else {
+    // Multiple
+    const currentSelected = Array.isArray(selected) ? selected : [];
+    const exists = selectedIds.has(itemId);
 
-  function handleKeyDown(e: KeyboardEvent) {
-    const length = filteredItems.length + (canCreate ? 1 : 0);
-
-    if (length === 0) return;
-
-    switch (e.key) {
-      case "ArrowDown": {
-        highlightedIndex = (highlightedIndex + 1) % length;
-
-        e.preventDefault();
-        break;
+    // biome-ignore lint/suspicious/noImplicitAnyLet: fds
+    let newSelection;
+    if (exists) {
+      if (bindingType === "item") {
+        // @ts-expect-error
+        newSelection = currentSelected.filter((i: TItem) => itemToId(i) !== itemId);
+      } else {
+        newSelection = currentSelected.filter((id) => id !== itemId);
       }
-      case "ArrowUp": {
-        highlightedIndex = (Math.max(highlightedIndex, 0) - 1 + length) % length;
-
-        e.preventDefault();
-        break;
-      }
-      case "Enter": {
-        if (highlightedIndex !== -1) {
-          if (highlightedIndex === filteredItems.length) {
-            handleCreate();
-          } else {
-            handleClick(filteredItems[highlightedIndex]);
-          }
-          e.preventDefault();
-        }
-        break;
-      }
+    } else {
+      newSelection = [...currentSelected, itemValue];
     }
 
-    itemElements[highlightedIndex]?.scrollIntoView({
-      block: "nearest",
-      behavior: "smooth"
-    });
+    // @ts-expect-error
+    selected = newSelection;
   }
 
-  let canCreate = $derived(createable && searchTerm && filteredItems.every((x) => itemToString(x).trim() !== searchTerm.trim()));
+  // Reset search
+  if (!keepSearchTermOnClose && type === "single") searchTerm = "";
+}
+
+function handleCreate() {
+  if (!canCreate) return;
+  onCreate?.(searchTerm);
+  open = false;
+}
+
+function handleKeyDown(e: KeyboardEvent) {
+  const length = filteredItems.length + (canCreate ? 1 : 0);
+
+  if (length === 0) return;
+
+  switch (e.key) {
+    case "ArrowDown": {
+      highlightedIndex = (highlightedIndex + 1) % length;
+
+      e.preventDefault();
+      break;
+    }
+    case "ArrowUp": {
+      highlightedIndex = (Math.max(highlightedIndex, 0) - 1 + length) % length;
+
+      e.preventDefault();
+      break;
+    }
+    case "Enter": {
+      if (highlightedIndex !== -1) {
+        if (highlightedIndex === filteredItems.length) {
+          handleCreate();
+        } else {
+          handleClick(filteredItems[highlightedIndex]);
+        }
+        e.preventDefault();
+      }
+      break;
+    }
+  }
+
+  itemElements[highlightedIndex]?.scrollIntoView({
+    block: "nearest",
+    behavior: "smooth"
+  });
+}
+
+$effect(() => {
+  if (open) {
+    searchBox?.focus();
+    highlightedIndex = -1;
+    if (!keepSearchTermOnClose) searchTerm = "";
+  }
+});
+
+let canCreate = $derived(createable && searchTerm && filteredItems.every((x) => itemToString(x).trim() !== searchTerm.trim()));
 </script>
 
 <Dropdown.Root {...restProps} bind:open>
@@ -141,22 +181,20 @@
       if (open) handleKeyDown(e);
     }}
   >
-    <span class="truncate {selectedItem || selectedItems.length > 0 ? '' : 'text-current/50'} ">
-      {triggerLabel}
-    </span>
-    <ChevronsUpDown size={16} class="shrink-0 text-[var(--input-color)]" />
+    <span class="truncate {selectedItems.length > 0 ? '' : 'text-current/50'} "> {triggerLabel} </span>
+    <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
   <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-box popover-dropdown-auto-size mt-1 w-52 border-(length:--border) shadow-sm">
     {#if searchable}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
-        <Search size={16} class="shrink-0 text-[var(--input-color)]" />
-        <input type="search" bind:this={searchBox} class="grow" placeholder="Search" bind:value={searchTerm} onkeydown={handleKeyDown} />
-        {#if canCreate && false}
+        <Search size={16} class="shrink-0 text-(--input-color)" />
+        <input type="search" bind:this={searchBox} class="grow" placeholder="Search" bind:value={searchTerm} onkeydown={handleKeyDown}>
+        {#if canCreate}
           <button type="button" class="btn btn-xs">Add new</button>
         {/if}
       </label>
-      <hr class="text-base-content/20" />
+      <hr class="text-base-content/20">
     {/if}
 
     <ul
@@ -180,13 +218,11 @@
               {@render itemTemplate(item, isSelected)}
             {:else}
               {#if type === "multiple"}
-                <input type="checkbox" checked={isSelected} class="checkbox checkbox-sm" />
+                <input type="checkbox" checked={isSelected} class="checkbox checkbox-sm">
               {:else}
                 <Check size={12} opacity={isSelected ? 1 : 0} class="transition-opacity" />
               {/if}
-              <span>
-                {itemToString(item)}
-              </span>
+              <span> {itemToString(item)} </span>
             {/if}
           </button>
         </li>
@@ -200,18 +236,14 @@
           <li bind:this={itemElements[filteredItems.length]}>
             <button type="button" onclick={handleCreate} class:menu-focus={highlightedIndex === filteredItems.length} class="text-base-content flex items-center">
               <Plus size={12} />
-              <span>
-                {searchTerm}
-              </span>
+              <span> {searchTerm} </span>
             </button>
           </li>
         </div>
       {/if}
 
       {#if filteredItems.length === 0 && !canCreate}
-        <li class="menu-disabled">
-          <span>No results found.</span>
-        </li>
+        <li class="menu-disabled"><span>No results found.</span></li>
       {/if}
     </ul>
   </Dropdown.Content>

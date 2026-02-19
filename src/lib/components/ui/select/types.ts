@@ -1,16 +1,39 @@
 import type { Snippet } from "svelte";
 
-export type SelectProps<TItem> = {
-  type?: "single" | "multiple";
+export type SelectSelectionMode = "single" | "multiple";
+export type SelectBindingType = "item" | "id";
+
+type SelectCommon<TItem> = {
   searchable?: boolean;
-  keepSearchTermOnClose?: boolean;
   createable?: boolean;
+  keepSearchTermOnClose?: boolean;
+  allowDeselect?: boolean;
   items?: TItem[];
   placeholder?: string;
   itemToString?: (item: TItem) => string;
   itemToId?: (item: TItem) => string | number;
   itemTemplate?: Snippet<[TItem, boolean]> | undefined;
-  selectedItem?: TItem | undefined;
-  selectedItems?: TItem[];
   onCreate?: (value: string) => void;
 };
+
+export type SelectProps<TItem> =
+  | (SelectCommon<TItem> & {
+      type?: "single";
+      bindingType?: "item";
+      selected?: TItem;
+    })
+  | (SelectCommon<TItem> & {
+      type?: "single";
+      bindingType: "id";
+      selected?: string | number;
+    })
+  | (SelectCommon<TItem> & {
+      type: "multiple";
+      bindingType?: "item";
+      selected?: TItem[];
+    })
+  | (SelectCommon<TItem> & {
+      type: "multiple";
+      bindingType: "id";
+      selected?: (string | number)[];
+    });
