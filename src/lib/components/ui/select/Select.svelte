@@ -61,7 +61,7 @@ const selectedItems = $derived.by((): TItem[] => {
 const selectedIds = $derived(new Set(selectedItems.map(itemToId)));
 
 const filteredItems = $derived.by(() => {
-  if (!searchable || !searchTerm) return items;
+  if (!(searchable === true || searchable === "true") || !searchTerm) return items;
 
   const lowerTerm = searchTerm.trim().toLowerCase();
 
@@ -166,7 +166,7 @@ $effect(() => {
   }
 });
 
-let canCreate = $derived(createable && searchTerm && filteredItems.every((x) => itemToString(x).trim() !== searchTerm.trim()));
+let canCreate = $derived((createable === true || createable === "true") && searchTerm && filteredItems.every((x) => itemToString(x).trim() !== searchTerm.trim()));
 </script>
 
 <Dropdown.Root {...restProps} bind:open>
@@ -186,7 +186,7 @@ let canCreate = $derived(createable && searchTerm && filteredItems.every((x) => 
   </Dropdown.Trigger>
 
   <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field popover-dropdown-auto-size mt-1 w-52 border-(length:--border) shadow-sm">
-    {#if searchable}
+    {#if searchable === true || searchable === "true"}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
         <Search size={16} class="shrink-0 text-(--input-color)" />
         <input type="search" bind:this={searchBox} class="grow" placeholder="Search" bind:value={searchTerm} onkeydown={handleKeyDown}>
