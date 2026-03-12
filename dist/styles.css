@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@utility anchor-* {
+  anchor-name: --value([*]);
+}
+
+@utility position-anchor-* {
+  position-anchor: --value([*]);
+}
+
+@utility no-spinner {
+  /* Hide WebKit spin buttons */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Disable Firefox spinner styling */
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+@utility touch-hitbox {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    min-height: 44px;
+    min-width: 44px;
+    z-index: 9999;
+  }
+}
+
+.popover-dropdown {
+  @apply inline-block text-inherit;
+
+  z-index: 999;
+  animation: popover-dropdown 0.2s;
+  transition-property: opacity, scale, display;
+  transition-behavior: allow-discrete;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  @starting-style {
+    scale: 95%;
+    opacity: 0;
+  }
+
+  &:not(:popover-open) {
+    @apply hidden origin-top opacity-0;
+    scale: 95%;
+  }
+
+  /* POSITION SUPPORTING ANCHOR */
+  @supports (position-area: bottom) {
+    position: fixed;
+    inset: unset;
+    position-area: bottom span-right;
+    position-try: flip-block, flip-inline;
+
+    &.popover-dropdown-center {
+      position-area: bottom;
+      position-try:
+        flip-block,
+        flip-inline,
+        bottom span-left,
+        bottom span-right,
+        top span-left,
+        top span-right;
+    }
+  }
+
+  /* POSITION SUPPORTING NOT SUPPORTING ANCHOR */
+  @supports not (position-area: bottom) {
+    inset: unset;
+    position: absolute;
+
+    top: anchor(bottom);
+    left: anchor(left);
+
+    position-try: --bottom-span-left, --top-span-right, --top-span-left;
+
+    @position-try --bottom-span-left {
+      top: anchor(bottom);
+      right: anchor(right);
+
+      bottom: auto;
+      left: auto;
+    }
+
+    @position-try --top-span-right {
+      bottom: anchor(top);
+      left: anchor(left);
+
+      top: auto;
+      right: auto;
+    }
+
+    @position-try --top-span-left {
+      bottom: anchor(top);
+      right: anchor(right);
+
+      top: auto;
+      left: auto;
+    }
+  }
+
+  /* AUTOWIDTH */
+  @supports (width: anchor-size(width)) {
+    &.popover-dropdown-auto-size {
+      width: anchor-size(width);
+    }
+  }
+}
+
+@keyframes popover-dropdown {
+  0% {
+    opacity: 0;
+  }
+}
+
+.validator {
+  &.valid {
+    --input-color: var(--color-success);
+  }
+}
+
+.input-number {
+  .label {
+    display: flex;
+    height: calc(100% - 0.5rem);
+    align-items: center;
+    padding-inline: calc(0.25rem * 3);
+    white-space: nowrap;
+    font-size: inherit;
+
+    &:first-child {
+      margin-inline-start: calc(0.25rem * -3);
+      margin-inline-end: calc(0.25rem * 3);
+      border-inline-end: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+    }
+
+    &:nth-last-child(2) {
+      margin-inline-start: calc(0.25rem * 3);
+      margin-inline-end: calc(0.25rem * -5);
+      border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+    }
+
+    &:last-child {
+      margin-inline-start: calc(0.25rem * 3);
+      margin-inline-end: calc(0.25rem * -3);
+      border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+    }
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+  }
+}
+
+.input {
+  &.input-center input {
+    @apply text-center;
+  }
+}
+
+.input-number.input-tight {
+  & .label:first-child {
+    @apply me-0;
+  }
+
+  & .label:nth-child(3) {
+    @apply ms-0;
+  }
+
+  & input {
+    @apply w-6 text-center font-black;
+  }
+}
+
+.dots {
+  background-image: radial-gradient(var(--color-base-300) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+@utility modal-fullscreen {
+  &.modal-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+
+    & {
+      .modal-body {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+    }
+  }
+}
