@@ -215,3 +215,49 @@
     }
   }
 }
+
+.modal-body {
+  margin: calc(0.25rem * -6);
+  padding: calc(0.25rem * 6);
+}
+
+/* fdsadf */
+
+.modal {
+  @layer daisyui.l1.l2 {
+    &:popover-open{
+      @apply pointer-events-none visible opacity-100;
+      transition:
+      visibility 0s allow-discrete,
+      background-color 0.3s ease-out,
+      opacity 0.1s ease-out;
+      background-color: oklch(0% 0 0/ 0.05);
+      
+      .modal-box {
+        translate: 0 0;
+        scale: 1;
+        opacity: 1;
+      }
+      
+      :root:has(&) {
+        --page-has-backdrop: 1;
+        --page-overflow: hidden;
+        --page-scroll-bg: var(--page-scroll-bg-on);
+        --page-scroll-gutter: stable;
+        --page-scroll-transition: var(--page-scroll-transition-on);
+        animation: set-page-has-scroll forwards;
+        animation-timeline: scroll();
+      }
+      & > * {
+        @apply pointer-events-auto;
+      }
+    }
+
+    @starting-style {
+      &:popover-open,
+      .modal-toggle:checked + & {
+        @apply opacity-0;
+      }
+    }
+  }
+}

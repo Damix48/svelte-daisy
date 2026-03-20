@@ -15,3 +15,4 @@ export const Modal = {
 };
 
 export { useModal } from "./context";
+export type { ModalPosition, ModalOutsideBehavior, ModalContentProps } from "./types";
