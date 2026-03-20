@@ -363,7 +363,7 @@
     <ChevronsUpDown size={16} class="shrink-0 text-[var(--input-color)]" />
   </Dropdown.Trigger>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-box popover-dropdown-auto-size mt-1 w-full border shadow-sm">
+  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field popover-dropdown-auto-size mt-1 w-full border shadow-sm">
     {#if searchable}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
         <Search size={16} class="shrink-0 text-[var(--input-color)]" />

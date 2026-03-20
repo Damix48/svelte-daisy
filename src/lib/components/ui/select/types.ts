@@ -5,8 +5,8 @@ export type SelectSelectionMode = "single" | "multiple";
 export type SelectBindingType = "item" | "id";
 
 type SelectCommon<TItem> = {
-  searchable?: boolean;
-  createable?: boolean;
+  searchable?: Booleanish;
+  createable?: Booleanish;
   keepSearchTermOnClose?: boolean;
   allowDeselect?: Booleanish;
   items?: TItem[];

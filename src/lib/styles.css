@@ -131,64 +131,65 @@
     --input-color: var(--color-success);
   }
 }
+@layer utilities{
+  .input-number {
+    .label {
+      display: flex;
+      height: calc(100% - 0.5rem);
+      align-items: center;
+      padding-inline: calc(0.25rem * 3);
+      white-space: nowrap;
+      font-size: inherit;
 
-.input-number {
-  .label {
-    display: flex;
-    height: calc(100% - 0.5rem);
-    align-items: center;
-    padding-inline: calc(0.25rem * 3);
-    white-space: nowrap;
-    font-size: inherit;
+      &:first-child {
+        margin-inline-start: calc(0.25rem * -3);
+        margin-inline-end: calc(0.25rem * 3);
+        border-inline-end: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
 
-    &:first-child {
-      margin-inline-start: calc(0.25rem * -3);
-      margin-inline-end: calc(0.25rem * 3);
-      border-inline-end: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      &:nth-last-child(2) {
+        margin-inline-start: calc(0.25rem * 3);
+        margin-inline-end: calc(0.25rem * -5);
+        border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+
+      &:last-child {
+        margin-inline-start: calc(0.25rem * 3);
+        margin-inline-end: calc(0.25rem * -3);
+        border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
     }
 
-    &:nth-last-child(2) {
-      margin-inline-start: calc(0.25rem * 3);
-      margin-inline-end: calc(0.25rem * -5);
-      border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
     }
 
-    &:last-child {
-      margin-inline-start: calc(0.25rem * 3);
-      margin-inline-end: calc(0.25rem * -3);
-      border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+    input[type="number"] {
+      -moz-appearance: textfield; /* Firefox */
     }
   }
 
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  .input {
+    &.input-center input {
+      @apply text-center;
+    }
   }
 
-  input[type="number"] {
-    -moz-appearance: textfield; /* Firefox */
-  }
-}
+  .input-number.input-tight {
+    & .label:first-child {
+      @apply me-0;
+    }
 
-.input {
-  &.input-center input {
-    @apply text-center;
-  }
-}
+    & .label:nth-child(3) {
+      @apply ms-0;
+    }
 
-.input-number.input-tight {
-  & .label:first-child {
-    @apply me-0;
-  }
-
-  & .label:nth-child(3) {
-    @apply ms-0;
-  }
-
-  & input {
-    @apply w-6 text-center font-black;
+    & input {
+      @apply w-6 text-center;
+    }
   }
 }
 
