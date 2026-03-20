@@ -56,11 +56,12 @@ const close = (id: string) => {
   const modal = instances.get(id);
   if (!modal) return;
 
+  if (!modal.resolveHandled) {
+    modal.resolve(undefined);
+    modal.resolveHandled = true;
+  }
+
   setTimeout(() => {
-    if (!modal.resolveHandled) {
-      modal.resolve(undefined);
-      modal.resolveHandled = true;
-    }
     instances.delete(id);
   }, modal.destroyDelay);
 };
