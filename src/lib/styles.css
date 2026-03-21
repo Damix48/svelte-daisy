@@ -218,8 +218,8 @@
 }
 
 .modal-body {
-  margin: calc(0.25rem * -6);
-  padding: calc(0.25rem * 6);
+  margin-inline: calc(0.25rem * -6);
+  padding-inline: calc(0.25rem * 6);
 }
 
 /* fdsadf */
