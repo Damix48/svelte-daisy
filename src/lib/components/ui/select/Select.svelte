@@ -171,7 +171,7 @@ let canCreate = $derived((createable === true || createable === "true") && searc
 
 <Dropdown.Root {...restProps} bind:open>
   <Dropdown.Trigger
-    class="input [&:disabled>svg]:text-base-content/40 w-full cursor-pointer justify-between {restProps['class']}"
+    class="input [&:disabled>svg]:text-base-content/40 cursor-pointer justify-between {restProps['class']}"
     role="combobox"
     aria-haspopup="listbox"
     aria-expanded={open}
@@ -181,7 +181,7 @@ let canCreate = $derived((createable === true || createable === "true") && searc
       if (open) handleKeyDown(e);
     }}
   >
-    <span class="truncate {selectedItems.length > 0 ? '' : 'text-current/50'} "> {triggerLabel} </span>
+    <div class="flex items-center w-full"><span class="truncate {selectedItems.length > 0 ? '' : 'text-current/50'} ">{triggerLabel}</span></div>
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
