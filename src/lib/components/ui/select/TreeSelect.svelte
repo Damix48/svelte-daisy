@@ -355,7 +355,9 @@ $effect(() => {
       if (open) handleKeyDown(e);
     }}
   >
-    <div class="flex items-center w-full"><span class="truncate {selectedItems.length > 0 ? '' : 'text-current/50'}">{triggerLabel}</span></div>
+    <div class="flex min-w-0 flex-1 items-center justify-start text-left">
+      <span class="min-w-0 flex-1 truncate text-left {selectedItems.length > 0 ? '' : 'text-current/50'}">{triggerLabel}</span>
+    </div>
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
@@ -388,7 +390,7 @@ $effect(() => {
         {@const isExpanded = effectiveExpandedIds.has(id)}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={state === "all"} class="scroll-my-16">
-          <div class="flex w-full items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
+          <div class="flex w-full min-w-0 items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
             {#if node.hasChildren}
               <span
                 role="button"
@@ -406,9 +408,11 @@ $effect(() => {
               <span class="btn btn-square btn-ghost btn-xs invisible"></span>
             {/if}
 
-            <button type="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 flex-1 items-center gap-2 text-left" onclick={() => handleClick(node)}>
+            <button type="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left" onclick={() => handleClick(node)}>
               {#if itemTemplate}
-                {@render itemTemplate(node.item, state === "all")}
+                <div class="min-w-0 flex-1 overflow-hidden">
+                  {@render itemTemplate(node.item, state === "all")}
+                </div>
               {:else}
                 {#if type === "multiple"}
                   {#if !leafOnly || !node.hasChildren}
@@ -417,7 +421,7 @@ $effect(() => {
                 {:else}
                   <Check size={12} opacity={selectedIds.has(id) ? 1 : 0} class="transition-opacity" />
                 {/if}
-                <span class="truncate">{itemToString(node.item)}</span>
+                <span class="min-w-0 flex-1 truncate">{itemToString(node.item)}</span>
               {/if}
             </button>
           </div>

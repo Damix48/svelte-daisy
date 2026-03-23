@@ -181,7 +181,9 @@ let canCreate = $derived((createable === true || createable === "true") && searc
       if (open) handleKeyDown(e);
     }}
   >
-    <div class="flex items-center w-full"><span class="truncate {selectedItems.length > 0 ? '' : 'text-current/50'} ">{triggerLabel}</span></div>
+    <div class="flex min-w-0 flex-1 items-center justify-start text-left">
+      <span class="min-w-0 flex-1 truncate text-left {selectedItems.length > 0 ? '' : 'text-current/50'}">{triggerLabel}</span>
+    </div>
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
@@ -213,16 +215,18 @@ let canCreate = $derived((createable === true || createable === "true") && searc
         {@const isSelected = selectedIds.has(itemToId(item))}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={isSelected} class="scroll-my-16">
-          <button type="button" class:menu-focus={i === highlightedIndex} onclick={() => handleClick(item)}>
+          <button type="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 items-center gap-2 overflow-hidden text-left" onclick={() => handleClick(item)}>
             {#if itemTemplate}
-              {@render itemTemplate(item, isSelected)}
+              <div class="min-w-0 flex-1 overflow-hidden">
+                {@render itemTemplate(item, isSelected)}
+              </div>
             {:else}
               {#if type === "multiple"}
                 <input type="checkbox" checked={isSelected} class="checkbox checkbox-sm">
               {:else}
                 <Check size={12} opacity={isSelected ? 1 : 0} class="transition-opacity" />
               {/if}
-              <span> {itemToString(item)} </span>
+              <span class="min-w-0 flex-1 truncate">{itemToString(item)}</span>
             {/if}
           </button>
         </li>
