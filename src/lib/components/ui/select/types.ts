@@ -38,3 +38,35 @@ export type SelectProps<TItem> =
       bindingType: "id";
       selected?: (string | number)[];
     });
+
+export type TreeSelectionMode = "any" | "leaf";
+
+export type TreeSelectProps<TItem> =
+  | (SelectCommon<TItem> & {
+      type?: "single";
+      bindingType?: "item";
+      selected?: TItem;
+      cascadeSelection?: Booleanish;
+      selectionMode?: TreeSelectionMode;
+    })
+  | (SelectCommon<TItem> & {
+      type?: "single";
+      bindingType: "id";
+      selected?: string | number;
+      cascadeSelection?: Booleanish;
+      selectionMode?: TreeSelectionMode;
+    })
+  | (SelectCommon<TItem> & {
+      type: "multiple";
+      bindingType?: "item";
+      selected?: TItem[];
+      cascadeSelection?: Booleanish;
+      selectionMode?: TreeSelectionMode;
+    })
+  | (SelectCommon<TItem> & {
+      type: "multiple";
+      bindingType: "id";
+      selected?: (string | number)[];
+      cascadeSelection?: Booleanish;
+      selectionMode?: TreeSelectionMode;
+    });
