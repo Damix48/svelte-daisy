@@ -388,7 +388,7 @@ $effect(() => {
         {@const isExpanded = effectiveExpandedIds.has(id)}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={state === "all"} class="scroll-my-16">
-          <div class="flex w-full min-w-0 items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
+          <button onclick={() => handleClick(node)} class="flex w-full min-w-0 items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
             {#if node.hasChildren}
               <span
                 role="button"
@@ -406,7 +406,7 @@ $effect(() => {
               <span class="btn btn-square btn-ghost btn-xs invisible"></span>
             {/if}
 
-            <button type="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left" onclick={() => handleClick(node)}>
+            <span role="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left" >
               {#if itemTemplate}
                 <div class="min-w-0 flex-1 overflow-hidden">
                   {@render itemTemplate(node.item, state === "all")}
@@ -421,8 +421,8 @@ $effect(() => {
                 {/if}
                 <span class="min-w-0 flex-1 truncate">{itemToString(node.item)}</span>
               {/if}
-            </button>
-          </div>
+            </span>
+          </button>
         </li>
       {/each}
 
