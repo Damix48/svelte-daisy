@@ -388,7 +388,7 @@ $effect(() => {
         {@const isExpanded = effectiveExpandedIds.has(id)}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={state === "all"} class="scroll-my-16">
-          <button onclick={() => handleClick(node)} class="flex w-full min-w-0 items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
+          <button type="button" onclick={() => handleClick(node)} class="flex w-full min-w-0 items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
             {#if node.hasChildren}
               <span
                 role="button"
