@@ -3,6 +3,7 @@ import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelt
 import { Dropdown } from "../dropdown";
 import type { TreeSelectProps } from "./types";
 import type { HTMLInputAttributes } from "svelte/elements";
+    import { SvelteSet } from "svelte/reactivity";
 
 type SelectionState = "none" | "some" | "all";
 type DisplayItem = {
@@ -34,7 +35,7 @@ let {
 
 let searchTerm = $state("");
 let open = $state(false);
-let expandedIds = $state(new Set<string | number>());
+let expandedIds = new SvelteSet<string|number>();
 
 let searchBox: HTMLInputElement | undefined = $state(undefined);
 let highlightedIndex = $state(-1);
@@ -210,8 +211,6 @@ function toggleExpand(e: MouseEvent | KeyboardEvent, id: string | number) {
 
   if (expandedIds.has(id)) expandedIds.delete(id);
   else expandedIds.add(id);
-
-  expandedIds = new Set(expandedIds);
 }
 
 function commitSelection(item: TItem) {
@@ -258,6 +257,10 @@ function commitSelection(item: TItem) {
   } else {
     selected = [...currentIds, ...idsToToggle.filter((id) => !currentIdSet.has(id))];
   }
+
+  if (searchTerm) {
+    searchBox?.focus();
+  }
 }
 
 function handleClick(node: DisplayItem) {
@@ -266,7 +269,7 @@ function handleClick(node: DisplayItem) {
   if (leafOnly && node.hasChildren) {
     if (expandedIds.has(id)) expandedIds.delete(id);
     else expandedIds.add(id);
-    expandedIds = new Set(expandedIds);
+
     return;
   }
 
@@ -302,7 +305,6 @@ function handleKeyDown(e: KeyboardEvent) {
       const currentNode = visibleItems[highlightedIndex];
       if (currentNode && currentNode.hasChildren && !effectiveExpandedIds.has(itemToId(currentNode.item))) {
         expandedIds.add(itemToId(currentNode.item));
-        expandedIds = new Set(expandedIds);
       }
       e.preventDefault();
       break;
@@ -311,7 +313,6 @@ function handleKeyDown(e: KeyboardEvent) {
       const currentNode = visibleItems[highlightedIndex];
       if (currentNode && currentNode.hasChildren && effectiveExpandedIds.has(itemToId(currentNode.item))) {
         expandedIds.delete(itemToId(currentNode.item));
-        expandedIds = new Set(expandedIds);
       }
       e.preventDefault();
       break;
@@ -388,7 +389,7 @@ $effect(() => {
         {@const isExpanded = effectiveExpandedIds.has(id)}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={state === "all"} class="scroll-my-16">
-          <button type="button" onclick={() => handleClick(node)} class="flex w-full min-w-0 items-center gap-2" style="padding-left: {node.level * 1.5 + 0.375}rem;">
+          <button type="button" onclick={() => handleClick(node)} class="flex w-full min-w-0 items-center gap-2" class:menu-focus={i === highlightedIndex} style="padding-left: {node.level * 1.5 + 0.375}rem;">
             {#if node.hasChildren}
               <span
                 role="button"
@@ -406,7 +407,7 @@ $effect(() => {
               <span class="btn btn-square btn-ghost btn-xs invisible"></span>
             {/if}
 
-            <span role="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left" >
+            <span role="button" class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left" >
               {#if itemTemplate}
                 <div class="min-w-0 flex-1 overflow-hidden">
                   {@render itemTemplate(node.item, state === "all")}
