@@ -1,9 +1,10 @@
 <script lang="ts" generics="TItem extends { children?: TItem[] }">
-import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
-import { Dropdown } from "../dropdown";
-import type { TreeSelectProps } from "./types";
-import type { HTMLInputAttributes } from "svelte/elements";
-    import { SvelteSet } from "svelte/reactivity";
+  import { onMount } from "svelte";
+  import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
+  import { Dropdown } from "../dropdown";
+  import type { TreeSelectProps } from "./types";
+  import type { HTMLInputAttributes } from "svelte/elements";
+  import { SvelteSet } from "svelte/reactivity";
 
 type SelectionState = "none" | "some" | "all";
 type DisplayItem = {
@@ -342,6 +343,39 @@ $effect(() => {
   const totalItems = visibleItems.length + (canCreate ? 1 : 0);
   if (highlightedIndex >= totalItems) highlightedIndex = totalItems - 1;
 });
+
+onMount(() => {
+  const root = document.documentElement;
+
+  const updateViewportVars = () => {
+    const viewport = window.visualViewport;
+
+    if (!viewport) {
+      root.style.removeProperty("--select-sheet-keyboard-offset");
+      root.style.removeProperty("--select-sheet-viewport-height");
+      return;
+    }
+
+    const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+    root.style.setProperty("--select-sheet-keyboard-offset", `${keyboardOffset}px`);
+    root.style.setProperty("--select-sheet-viewport-height", `${viewport.height}px`);
+  };
+
+  updateViewportVars();
+
+  const viewport = window.visualViewport;
+  viewport?.addEventListener("resize", updateViewportVars);
+  viewport?.addEventListener("scroll", updateViewportVars);
+  window.addEventListener("resize", updateViewportVars);
+
+  return () => {
+    viewport?.removeEventListener("resize", updateViewportVars);
+    viewport?.removeEventListener("scroll", updateViewportVars);
+    window.removeEventListener("resize", updateViewportVars);
+    root.style.removeProperty("--select-sheet-keyboard-offset");
+    root.style.removeProperty("--select-sheet-viewport-height");
+  };
+});
 </script>
 
 <Dropdown.Root {...restProps} bind:open>
@@ -360,9 +394,9 @@ $effect(() => {
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field popover-dropdown-auto-size mt-1 w-52 border-(length:--border) shadow-sm">
+  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field tree-select-sheet popover-dropdown-auto-size mt-1 w-52 border-(length:--border) shadow-sm">
     {#if searchableEnabled}
-      <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
+      <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0 shrink-0">
         <Search size={16} class="shrink-0 text-(--input-color)" />
         <input type="search" bind:this={searchBox} class="grow" placeholder="Search" bind:value={searchTerm} onkeydown={handleKeyDown}>
         {#if canCreate}

@@ -1,28 +1,28 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { HTMLAttributes } from "svelte/elements";
-  import { mergeProps } from "svelte-toolbelt";
-  import { context } from "./context";
+import type { Snippet } from "svelte";
+import type { HTMLAttributes } from "svelte/elements";
+import { mergeProps } from "svelte-toolbelt";
+import { context } from "./context";
 
-  const c = context.get();
+const c = context.get();
 
-  let popoverRef: HTMLDivElement;
+let popoverRef: HTMLDivElement;
 
-  type DropdownContentProps = {
-    children?: Snippet | undefined;
-  };
+type DropdownContentProps = {
+  children?: Snippet | undefined;
+};
 
-  let { children, ...restProps }: DropdownContentProps & Omit<HTMLAttributes<HTMLDivElement>, "id" | "popovertarget" | "popover" | "popovertargetaction" | "ontoggle" | "onclose"> =
-    $props();
+let { children, ...restProps }: DropdownContentProps & Omit<HTMLAttributes<HTMLDivElement>, "id" | "popovertarget" | "popover" | "popovertargetaction" | "ontoggle" | "onclose"> =
+  $props();
 
-  restProps = mergeProps(restProps, {
-    class: "position-anchor-[--popover] popover-dropdown popover-dropdown-auto-position"
-  });
+restProps = mergeProps(restProps, {
+  class: "position-anchor-[--popover] popover-dropdown"
+});
 
-  $effect(() => {
-    if (c.open) popoverRef.showPopover();
-    else popoverRef.hidePopover();
-  });
+$effect(() => {
+  if (c.open) popoverRef.showPopover();
+  else popoverRef.hidePopover();
+});
 </script>
 
 <div

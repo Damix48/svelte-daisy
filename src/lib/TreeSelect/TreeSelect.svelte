@@ -346,6 +346,39 @@
   $effect(() => {
     selectedIds = [...internalSelectedIds];
   });
+
+  onMount(() => {
+    const root = document.documentElement;
+
+    const updateViewportVars = () => {
+      const viewport = window.visualViewport;
+
+      if (!viewport) {
+        root.style.removeProperty("--select-sheet-keyboard-offset");
+        root.style.removeProperty("--select-sheet-viewport-height");
+        return;
+      }
+
+      const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      root.style.setProperty("--select-sheet-keyboard-offset", `${keyboardOffset}px`);
+      root.style.setProperty("--select-sheet-viewport-height", `${viewport.height}px`);
+    };
+
+    updateViewportVars();
+
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", updateViewportVars);
+    viewport?.addEventListener("scroll", updateViewportVars);
+    window.addEventListener("resize", updateViewportVars);
+
+    return () => {
+      viewport?.removeEventListener("resize", updateViewportVars);
+      viewport?.removeEventListener("scroll", updateViewportVars);
+      window.removeEventListener("resize", updateViewportVars);
+      root.style.removeProperty("--select-sheet-keyboard-offset");
+      root.style.removeProperty("--select-sheet-viewport-height");
+    };
+  });
 </script>
 
 <Dropdown.Root {...restProps} bind:open>
@@ -363,7 +396,7 @@
     <ChevronsUpDown size={16} class="shrink-0 text-[var(--input-color)]" />
   </Dropdown.Trigger>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field popover-dropdown-auto-size mt-1 w-full border shadow-sm">
+  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field tree-select-sheet popover-dropdown-auto-size mt-1 w-full border shadow-sm">
     {#if searchable}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
         <Search size={16} class="shrink-0 text-[var(--input-color)]" />

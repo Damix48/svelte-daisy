@@ -1,8 +1,9 @@
 <script lang="ts" generics="TItem">
-import { Dropdown } from "../dropdown";
-import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
-import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
-import type { HTMLInputAttributes } from "svelte/elements";
+  import { onMount } from "svelte";
+  import { Dropdown } from "../dropdown";
+  import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
+  import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
+  import type { HTMLInputAttributes } from "svelte/elements";
 
 let {
   type = "single",
@@ -167,6 +168,39 @@ $effect(() => {
 });
 
 let canCreate = $derived((createable === true || createable === "true") && searchTerm && filteredItems.every((x) => itemToString(x).trim() !== searchTerm.trim()));
+
+onMount(() => {
+  const root = document.documentElement;
+
+  const updateViewportVars = () => {
+    const viewport = window.visualViewport;
+
+    if (!viewport) {
+      root.style.removeProperty("--select-sheet-keyboard-offset");
+      root.style.removeProperty("--select-sheet-viewport-height");
+      return;
+    }
+
+    const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+    root.style.setProperty("--select-sheet-keyboard-offset", `${keyboardOffset}px`);
+    root.style.setProperty("--select-sheet-viewport-height", `${viewport.height}px`);
+  };
+
+  updateViewportVars();
+
+  const viewport = window.visualViewport;
+  viewport?.addEventListener("resize", updateViewportVars);
+  viewport?.addEventListener("scroll", updateViewportVars);
+  window.addEventListener("resize", updateViewportVars);
+
+  return () => {
+    viewport?.removeEventListener("resize", updateViewportVars);
+    viewport?.removeEventListener("scroll", updateViewportVars);
+    window.removeEventListener("resize", updateViewportVars);
+    root.style.removeProperty("--select-sheet-keyboard-offset");
+    root.style.removeProperty("--select-sheet-viewport-height");
+  };
+});
 </script>
 
 <Dropdown.Root {...restProps} bind:open>
@@ -185,9 +219,9 @@ let canCreate = $derived((createable === true || createable === "true") && searc
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field popover-dropdown-auto-size mt-1 w-52 border-(length:--border) shadow-sm">
+  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field select-sheet popover-dropdown-auto-size mt-1 w-52 border-(length:--border) shadow-sm">
     {#if searchable === true || searchable === "true"}
-      <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0">
+      <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0 shrink-0">
         <Search size={16} class="shrink-0 text-(--input-color)" />
         <input type="search" bind:this={searchBox} class="grow" placeholder="Search" bind:value={searchTerm} onkeydown={handleKeyDown}>
         {#if canCreate}
