@@ -213,6 +213,80 @@
       width: anchor-size(width);
     }
   }
+
+  @media (max-width: 640px) {
+    position: fixed;
+    position-anchor: none;
+    anchor-name: none;
+    inset-block-start: auto;
+    inset-inline: 0;
+    inset-block-end: 0;
+    width: 100dvw;
+    max-width: none;
+    max-height: 75dvh;
+    border-radius: 0.75rem 0.75rem 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    @supports (position-area: bottom) {
+      position-area: unset;
+      position-try: none;
+    }
+
+    &:not(:popover-open) {
+      @apply hidden origin-top opacity-0;
+      scale: 95%;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .popover-dropdown.select-sheet,
+  .popover-dropdown.tree-select-sheet {
+    position: fixed;
+    position-anchor: none;
+    anchor-name: none;
+    inset-block-start: auto;
+    inset-inline: 0;
+    inset-block-end: var(--select-sheet-keyboard-offset, 0px);
+    width: 100dvw;
+    max-width: none;
+    max-height: min(75dvh, calc(var(--select-sheet-viewport-height, 100dvh) - 4rem));
+    border-radius: 0.75rem 0.75rem 0 0;
+    border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
+    border-bottom: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* .popover-dropdown.select-sheet,
+  .popover-dropdown.tree-select-sheet {
+    display: flex;
+    flex-direction: column;
+
+
+  } */
+
+  .popover-dropdown.select-sheet > .input,
+  .popover-dropdown.tree-select-sheet > .input,
+  .popover-dropdown.select-sheet > label.input,
+  .popover-dropdown.tree-select-sheet > label.input {
+    /* flex-shrink: 0; */
+    /* flex: 0 0 auto; */
+    /* min-height: 3rem; */
+  }
+
+  .popover-dropdown.select-sheet .menu,
+  .popover-dropdown.tree-select-sheet .menu {
+    max-height: none;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .popover-dropdown.select-sheet hr,
+  .popover-dropdown.tree-select-sheet hr {
+    flex: 0 0 auto;
+  }
 }
 
 @keyframes popover-dropdown {

@@ -137,6 +137,11 @@
       position-area: unset;
       position-try: none;
     }
+
+    &:not(:popover-open) {
+      @apply hidden origin-top opacity-0;
+      scale: 95%;
+    }
   }
 }
 
@@ -159,11 +164,11 @@
     overscroll-behavior: contain;
   }
 
-  .popover-dropdown.select-sheet,
+  /* .popover-dropdown.select-sheet,
   .popover-dropdown.tree-select-sheet {
     display: flex;
     flex-direction: column;
-  }
+  } */
 
   .popover-dropdown.select-sheet .menu,
   .popover-dropdown.tree-select-sheet .menu {
