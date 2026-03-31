@@ -16,7 +16,7 @@ let { children, ...restProps }: DropdownContentProps & Omit<HTMLAttributes<HTMLD
   $props();
 
 restProps = mergeProps(restProps, {
-  class: "position-anchor-[--popover] popover-dropdown"
+  class: "dropdown-content position-anchor-[--popover]"
 });
 
 $effect(() => {
