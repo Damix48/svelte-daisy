@@ -1,5 +1,4 @@
 <script lang="ts" generics="TItem">
-  import { onMount } from "svelte";
   import { Dropdown } from "../dropdown";
   import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
   import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
@@ -168,39 +167,6 @@ $effect(() => {
 });
 
 let canCreate = $derived((createable === true || createable === "true") && searchTerm && filteredItems.every((x) => itemToString(x).trim() !== searchTerm.trim()));
-
-onMount(() => {
-  const root = document.documentElement;
-
-  const updateViewportVars = () => {
-    const viewport = window.visualViewport;
-
-    if (!viewport) {
-      root.style.removeProperty("--select-sheet-keyboard-offset");
-      root.style.removeProperty("--select-sheet-viewport-height");
-      return;
-    }
-
-    const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-    root.style.setProperty("--select-sheet-keyboard-offset", `${keyboardOffset}px`);
-    root.style.setProperty("--select-sheet-viewport-height", `${viewport.height}px`);
-  };
-
-  updateViewportVars();
-
-  const viewport = window.visualViewport;
-  viewport?.addEventListener("resize", updateViewportVars);
-  viewport?.addEventListener("scroll", updateViewportVars);
-  window.addEventListener("resize", updateViewportVars);
-
-  return () => {
-    viewport?.removeEventListener("resize", updateViewportVars);
-    viewport?.removeEventListener("scroll", updateViewportVars);
-    window.removeEventListener("resize", updateViewportVars);
-    root.style.removeProperty("--select-sheet-keyboard-offset");
-    root.style.removeProperty("--select-sheet-viewport-height");
-  };
-});
 </script>
 
 <Dropdown.Root {...restProps} bind:open>

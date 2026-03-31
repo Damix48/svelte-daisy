@@ -1,5 +1,4 @@
 <script lang="ts" generics="TItem extends { children?: TItem[] }">
-  import { onMount } from "svelte";
   import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
   import { Dropdown } from "../dropdown";
   import type { TreeSelectProps } from "./types";
@@ -342,39 +341,6 @@ $effect(() => {
 $effect(() => {
   const totalItems = visibleItems.length + (canCreate ? 1 : 0);
   if (highlightedIndex >= totalItems) highlightedIndex = totalItems - 1;
-});
-
-onMount(() => {
-  const root = document.documentElement;
-
-  const updateViewportVars = () => {
-    const viewport = window.visualViewport;
-
-    if (!viewport) {
-      root.style.removeProperty("--select-sheet-keyboard-offset");
-      root.style.removeProperty("--select-sheet-viewport-height");
-      return;
-    }
-
-    const keyboardOffset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-    root.style.setProperty("--select-sheet-keyboard-offset", `${keyboardOffset}px`);
-    root.style.setProperty("--select-sheet-viewport-height", `${viewport.height}px`);
-  };
-
-  updateViewportVars();
-
-  const viewport = window.visualViewport;
-  viewport?.addEventListener("resize", updateViewportVars);
-  viewport?.addEventListener("scroll", updateViewportVars);
-  window.addEventListener("resize", updateViewportVars);
-
-  return () => {
-    viewport?.removeEventListener("resize", updateViewportVars);
-    viewport?.removeEventListener("scroll", updateViewportVars);
-    window.removeEventListener("resize", updateViewportVars);
-    root.style.removeProperty("--select-sheet-keyboard-offset");
-    root.style.removeProperty("--select-sheet-viewport-height");
-  };
 });
 </script>
 

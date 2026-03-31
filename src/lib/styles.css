@@ -84,10 +84,10 @@
   anchor-name: none;
   inset-block-start: auto;
   inset-inline: 0;
-  inset-block-end: var(--select-sheet-keyboard-offset, 0px);
+  inset-block-end: var(--keyboard-offset, 0px);
   width: 100dvw;
   max-width: none;
-  max-height: min(75dvh, calc(var(--select-sheet-viewport-height, 100dvh) - 4rem));
+  max-height: min(75dvh, calc(var(--viewport-height, 100dvh) - 4rem));
   border-radius: 0.75rem 0.75rem 0 0;
   border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
   border-bottom: 0;
@@ -189,6 +189,11 @@
 .dots {
   background-image: radial-gradient(var(--color-base-300) 1px, transparent 1px);
   background-size: 16px 16px;
+}
+
+.modal {
+  height: var(--viewport-height, 100dvh);
+  max-height: var(--viewport-height, 100dvh);
 }
 
 @utility modal-fullscreen {

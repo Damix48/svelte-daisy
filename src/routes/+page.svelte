@@ -93,7 +93,44 @@ let selectedNodes: Node[] = $state([]);
 
 <Modal.Root>
   <Modal.Trigger class="btn"> Open Modal</Modal.Trigger>
-  <Modal.Content outsideBehavior="close"> fdsafs <input type="text" placeholder="Type here" class="input"> </Modal.Content>
+  <Modal.Content outsideBehavior="close" class="modal-fullscreen">
+    <div class="modal-body">
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <p>Hello, I'm a modal!</p>
+      <input type="text" placeholder="Type here" class="input">
+    </div>
+  </Modal.Content>
 </Modal.Root>
 
 <button type="button" class="btn btn-primary" onclick={() => modalService.open(Ciao, {}, { outsideBehavior: "close-interact", position:"end" })}>Open popover</button>
