@@ -29,6 +29,4 @@ const state = {
 context.set(state);
 </script>
 
-<div class={`dropdown ${className ?? ""}`} style="anchor-scope: --popover; display: contents;" aria-invalid={ariaInvalid} class:validator={className?.includes("validator")}>
-  {@render children?.()}
-</div>
+<div style="anchor-scope: --popover; display: contents;" aria-invalid={ariaInvalid} class:validator={className?.includes("validator")}>{@render children?.()}</div>
