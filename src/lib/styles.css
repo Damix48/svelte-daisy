@@ -38,43 +38,21 @@
   }
 }
 
+.dropdown {
+  &:not(.dropdown-open, :popover-open) {
+    @apply hidden;
+  }
+}
+
 @utility dropdown-auto-size {
   @supports (width: anchor-size(width)) {
     width: anchor-size(width);
   }
 }
 
-@utility dropdown-popover {
-  @apply inline-block text-inherit;
-
-  z-index: 999;
-  transition-property: opacity, scale, display;
-  transition-behavior: allow-discrete;
-  transition-duration: 0.2s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-  @starting-style {
-    scale: 95%;
-    opacity: 0;
-  }
-
-  &:not(:popover-open) {
-    @apply hidden origin-top opacity-0;
-    scale: 95%;
-  }
-
-  @supports (position-area: bottom) {
-    position: fixed;
-    inset: unset;
-    position-area: bottom span-right;
-    position-try: flip-block, flip-inline;
-  }
-
-  @supports not (position-area: bottom) {
-    inset: unset;
-    position: absolute;
-    top: anchor(bottom);
-    left: anchor(left);
+@utility dropdown-auto-move {
+   @supports (position-area: bottom) {
+    position-try-fallbacks: flip-block, flip-inline;
   }
 }
 
