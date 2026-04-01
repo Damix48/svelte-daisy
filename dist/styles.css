@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+@utility anchor-* {
+  anchor-name: --value([*]);
+}
+
+@utility position-anchor-* {
+  position-anchor: --value([*]);
+}
+
+@utility no-spinner {
+  /* Hide WebKit spin buttons */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Disable Firefox spinner styling */
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+@utility touch-hitbox {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    min-height: 44px;
+    min-width: 44px;
+    z-index: 9999;
+  }
+}
+
+.dropdown {
+  &:not(.dropdown-open, :popover-open) {
+    @apply hidden;
+  }
+}
+
+@utility dropdown-auto-size {
+  @supports (width: anchor-size(width)) {
+    width: anchor-size(width);
+  }
+}
+
+@utility dropdown-auto-move {
+   @supports (position-area: bottom) {
+    position-try-fallbacks: flip-block, flip-inline;
+  }
+}
+
+@utility dropdown-sheet {
+  @apply fixed text-inherit;
+  position-anchor: none;
+  anchor-name: none;
+  inset-block-start: auto;
+  inset-inline: 0;
+  inset-block-end: var(--keyboard-offset, 0px);
+  width: 100dvw;
+  max-width: none;
+  max-height: min(75dvh, calc(var(--viewport-height, 100dvh) - 4rem));
+  border-radius: 0.75rem 0.75rem 0 0;
+  border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
+  border-bottom: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition-property: opacity, translate, display;
+  transition-behavior: allow-discrete;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  @starting-style {
+    translate: 0 0.5rem;
+    opacity: 0;
+  }
+
+  &:not(:popover-open) {
+    @apply hidden opacity-0;
+    translate: 0 0.5rem;
+  }
+
+  .menu {
+    max-height: none;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  hr {
+    flex: 0 0 auto;
+  }
+}
+
+.validator {
+  &.valid {
+    --input-color: var(--color-success);
+  }
+}
+@layer utilities {
+  .input-number {
+    .label {
+      display: flex;
+      height: calc(100% - 0.5rem);
+      align-items: center;
+      padding-inline: calc(0.25rem * 3);
+      white-space: nowrap;
+      font-size: inherit;
+
+      &:first-child {
+        margin-inline-start: calc(0.25rem * -3);
+        margin-inline-end: calc(0.25rem * 3);
+        border-inline-end: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+
+      &:nth-last-child(2) {
+        margin-inline-start: calc(0.25rem * 3);
+        margin-inline-end: calc(0.25rem * -5);
+        border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+
+      &:last-child {
+        margin-inline-start: calc(0.25rem * 3);
+        margin-inline-end: calc(0.25rem * -3);
+        border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield; /* Firefox */
+    }
+  }
+
+  .input {
+    &.input-center input {
+      @apply text-center;
+    }
+  }
+
+  .input-number.input-tight {
+    & .label:first-child {
+      @apply me-0;
+    }
+
+    & .label:nth-child(3) {
+      @apply ms-0;
+    }
+
+    & input {
+      @apply w-6 text-center;
+    }
+  }
+}
+
+.dots {
+  background-image: radial-gradient(var(--color-base-300) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.modal {
+  height: var(--viewport-height, 100dvh);
+  max-height: var(--viewport-height, 100dvh);
+}
+
+@utility modal-fullscreen {
+  &.modal-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+
+    & {
+      .modal-body {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+    }
+  }
+}
+
+.modal-body {
+  margin-inline: calc(0.25rem * -6);
+  padding-inline: calc(0.25rem * 6);
+}
+
+/* fdsadf */
+
+.modal {
+  @layer daisyui.l1.l2 {
+    &:popover-open {
+      @apply pointer-events-none visible opacity-100;
+      transition:
+        visibility 0s allow-discrete,
+        background-color 0.3s ease-out,
+        opacity 0.1s ease-out;
+      background-color: oklch(0% 0 0 / 0.05);
+
+      .modal-box {
+        translate: 0 0;
+        scale: 1;
+        opacity: 1;
+      }
+
+      :root:has(&) {
+        --page-has-backdrop: 1;
+        --page-overflow: hidden;
+        --page-scroll-bg: var(--page-scroll-bg-on);
+        --page-scroll-gutter: stable;
+        --page-scroll-transition: var(--page-scroll-transition-on);
+        animation: set-page-has-scroll forwards;
+        animation-timeline: scroll();
+      }
+      & > * {
+        @apply pointer-events-auto;
+      }
+    }
+
+    @starting-style {
+      &:popover-open,
+      .modal-toggle:checked + & {
+        @apply opacity-0;
+      }
+    }
+  }
+}
