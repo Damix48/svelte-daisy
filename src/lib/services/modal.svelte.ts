@@ -1,8 +1,8 @@
 import { useId } from "$lib/utils/useId";
 import type { Component, ComponentProps } from "svelte";
 import { SvelteMap } from "svelte/reactivity";
-import { ConfirmModal } from "$lib/components/functional/confirm-modal";
-import type { ModalContentProps, ModalPosition } from "$lib/components/ui/modal";
+import { ConfirmModal, type ConfirmModalProps } from "$lib/components/functional/confirm-modal";
+import type { ModalContentProps } from "$lib/components/ui/modal";
 
 type ModalInstance<T extends Component<any, any, any>> = {
   id: string;
@@ -66,15 +66,13 @@ const close = (id: string) => {
   }, modal.destroyDelay);
 };
 
-const confirm = (title: string, text?: string, { cancelText, confirmText }: { cancelText?: string; confirmText?: string } = {}) => {
-  return open(ConfirmModal, {
+const confirm = async (title: Pick<ConfirmModalProps, "title">, text?: Pick<ConfirmModalProps, "text">, rest?: Omit<ConfirmModalProps, "title" | "text" | "onClose">) => {
+  return await open(ConfirmModal, {
     title,
     text,
-    cancelText,
-    confirmText
+    ...rest
   });
 };
-
 export const modalService = {
   get instances() {
     return instances.values();

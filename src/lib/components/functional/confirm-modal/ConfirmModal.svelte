@@ -1,53 +1,72 @@
 <script lang="ts">
 import { Modal, useModal } from "$lib/components/ui/modal";
+import type { ConfirmModalProps, ConfirmResult } from "./types";
 
 const c = useModal();
 
-type ConfirmModalProps = {
-  title: string;
-  text?: string;
-  onClose: (result: boolean) => void;
-  cancelText?: string;
-  confirmText?: string;
-};
+let {
+  title,
+  text,
+  onClose,
+  cancelText = "Cancel",
+  secondaryText,
+  confirmText = "Confirm",
+  cancelClass = "",
+  secondaryClass = "btn-secondary",
+  confirmClass = "btn-primary"
+}: ConfirmModalProps = $props();
 
-let { title, text, onClose, cancelText = "Cancel", confirmText = "Confirm" }: ConfirmModalProps = $props();
-
-let confirm = $state(false);
+let result: ConfirmResult = $state("cancel");
 
 $effect(() => {
   if (!c.open) {
-    onClose(confirm);
+    onClose(result);
   }
 });
 </script>
 
 <Modal.Header> {title} </Modal.Header>
 <Modal.Body>
-  {#if text}
+  {#if typeof text === "string"}
     <p class="mb-4">{text}</p>
+  {:else}
+    <div class="p-4">{@render text?.()}</div>
   {/if}
 </Modal.Body>
 <Modal.Footer>
   <button
     type="button"
-    class="btn"
+    class="btn {cancelClass}"
     onclick={() => {
-      confirm = false;
-      onClose(confirm);
+      result = "cancel";
+      onClose(result);
 
       c.open = false;
     }}
   >
     {cancelText}
   </button>
+  {#if secondaryText}
+    <button
+      type="button"
+      class="btn {secondaryClass}"
+      onclick={() => {
+        result = "secondary";
+        onClose(result);
+
+        c.open = false;
+      }}
+    >
+      {secondaryText}
+    </button>
+  {/if}
   <button
     type="button"
-    class="btn btn-primary"
+    class="btn {confirmClass}"
     onclick={() => {
-      confirm = true;
-      onClose(confirm);
-      
+      result = "confirm";
+      onClose(result);
+
       c.open = false;
     }}
   >
