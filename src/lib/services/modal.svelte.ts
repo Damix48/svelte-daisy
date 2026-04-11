@@ -14,7 +14,7 @@ type ModalInstance<T extends Component<any, any, any>> = {
   resolveHandled: boolean;
 } & Pick<ModalContentProps, "position" | "outsideBehavior">;
 
-type OpenModalOptions<T> = {
+type OpenModalOptions<T extends Component<any, any, any>> = {
   className?: string;
   destroyDelay?: number;
 } & Pick<ModalInstance<T>, "position" | "outsideBehavior">;
