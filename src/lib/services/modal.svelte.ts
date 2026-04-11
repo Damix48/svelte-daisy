@@ -66,7 +66,7 @@ const close = (id: string) => {
   }, modal.destroyDelay);
 };
 
-const confirm = async (title: Pick<ConfirmModalProps, "title">, text?: Pick<ConfirmModalProps, "text">, rest?: Omit<ConfirmModalProps, "title" | "text" | "onClose">) => {
+const confirm = async (title: ConfirmModalProps["title"], text?: ConfirmModalProps["text"], rest?: Omit<ConfirmModalProps, "title" | "text" | "onClose">) => {
   return await open(ConfirmModal, {
     title,
     text,
