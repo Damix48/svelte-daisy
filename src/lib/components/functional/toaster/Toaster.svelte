@@ -1,6 +1,6 @@
 <script>
-  import { X, Info, BadgeCheck, TriangleAlert, CircleX, LoaderCircle } from "@lucide/svelte";
-  import { Toaster } from "svelte-sonner";
+import { BadgeCheck, CircleX, Info, LoaderCircle, TriangleAlert, X } from "@lucide/svelte";
+import { Toaster } from "svelte-sonner";
 </script>
 
 <Toaster

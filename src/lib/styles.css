@@ -51,7 +51,7 @@
 }
 
 @utility dropdown-auto-move {
-   @supports (position-area: bottom) {
+  @supports (position-area: bottom) {
     position-try-fallbacks: flip-block, flip-inline;
   }
 }

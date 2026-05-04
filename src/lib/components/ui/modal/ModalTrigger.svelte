@@ -1,8 +1,8 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
 import type { HTMLButtonAttributes } from "svelte/elements";
-import { context } from "./context";
 import { mergeProps } from "svelte-toolbelt";
+import { context } from "./context";
 
 const c = context.get();
 

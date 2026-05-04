@@ -5,9 +5,9 @@
 @import "./lib/styles.css";
 @source "./lib";
 
-@plugin "daisyui";
+@plugin "daisyui/index.js";
 
-@plugin "daisyui/theme" {
+@plugin "daisyui/theme/index.js" {
   name: "corporate";
   default: true;
   prefersdark: false;
@@ -95,4 +95,3 @@
   --depth: 0;
   --noise: 1;
 }
-

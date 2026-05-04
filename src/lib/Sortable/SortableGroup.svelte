@@ -1,18 +1,18 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import { sortableGroupContext } from "./context";
-  import { SvelteMap } from "svelte/reactivity";
-  import { useId } from "$lib/utils/useId";
+import type { Snippet } from "svelte";
+import { SvelteMap } from "svelte/reactivity";
+import { useId } from "$lib/utils/useId";
+import { sortableGroupContext } from "./context";
 
-  type SortableGroupProps = {
-    children?: Snippet | undefined;
-  };
+type SortableGroupProps = {
+  children?: Snippet | undefined;
+};
 
-  let { children }: SortableGroupProps = $props();
+let { children }: SortableGroupProps = $props();
 
-  const removeItemMap = new SvelteMap<string, (index: number) => any>();
+const removeItemMap = new SvelteMap<string, (index: number) => any>();
 
-  sortableGroupContext.set({ id: useId("sortable-group"), removeItemMap });
+sortableGroupContext.set({ id: useId("sortable-group"), removeItemMap });
 </script>
 
 {@render children?.()}

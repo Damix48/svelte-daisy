@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { fieldContext, formContext } from "./context";
+import { fieldContext, formContext } from "./context";
 
-  const { errors } = formContext.get();
-  const field = fieldContext.getOr(undefined); // get context optionally
+const { errors } = formContext.get();
+const field = fieldContext.getOr(undefined); // get context optionally
 
-  // If field context exists, use its name for field-level errors.
-  // Otherwise, this component will show form-level errors.
-  const name = field?.name;
+// If field context exists, use its name for field-level errors.
+// Otherwise, this component will show form-level errors.
+const name = field?.name;
 </script>
 
 {#if name && $errors[name] && Array.isArray($errors[name])}

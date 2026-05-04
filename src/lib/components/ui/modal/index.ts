@@ -1,9 +1,9 @@
+import Body from "./ModalBody.svelte";
+import Content from "./ModalContent.svelte";
+import Footer from "./ModalFooter.svelte";
+import Header from "./ModalHeader.svelte";
 import Root from "./ModalRoot.svelte";
 import Trigger from "./ModalTrigger.svelte";
-import Content from "./ModalContent.svelte";
-import Header from "./ModalHeader.svelte";
-import Body from "./ModalBody.svelte";
-import Footer from "./ModalFooter.svelte";
 
 export const Modal = {
   Root,
@@ -15,4 +15,4 @@ export const Modal = {
 };
 
 export { useModal } from "./context";
-export type { ModalPosition, ModalOutsideBehavior, ModalContentProps } from "./types";
+export type { ModalContentProps, ModalOutsideBehavior, ModalPosition } from "./types";

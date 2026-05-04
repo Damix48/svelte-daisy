@@ -1,7 +1,7 @@
-import { setError, type SuperValidated } from "sveltekit-superforms";
+import { type SuperValidated, setError } from "sveltekit-superforms";
+import { type ErrorMessage, keyof, type ObjectEntries, type ObjectIssue, type ObjectSchema } from "valibot";
+import type { ZodObject, ZodRawShape } from "zod";
 import { toCamelCase } from "./casing";
-import { keyof, type ErrorMessage, type ObjectEntries, type ObjectIssue, type ObjectSchema } from "valibot";
-import { type ZodObject, type ZodRawShape } from "zod";
 
 type HttpValidationProblemDetails = {
   type?: string;

@@ -10,8 +10,8 @@
     "prepack": "svelte-kit sync && svelte-package && publint",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "format": "prettier --write .",
-    "lint": "prettier --check . && eslint ."
+    "lint": "biome check .",
+    "format": "biome check --write ."
   },
   "files": [
     "dist",
@@ -36,34 +36,34 @@
     "svelte": "^5.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.11",
+    "@biomejs/biome": "2.4.14",
     "@sveltejs/adapter-auto": "^7.0.1",
-    "@sveltejs/kit": "^2.57.1",
+    "@sveltejs/kit": "^2.59.0",
     "@sveltejs/package": "^2.5.7",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.4",
     "daisyui": "^5.5.19",
-    "globals": "^17.4.0",
+    "globals": "^17.6.0",
     "publint": "^0.3.18",
-    "svelte": "^5.55.3",
-    "svelte-check": "^4.4.6",
-    "tailwindcss": "^4.2.2",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.1",
-    "vite": "^8.0.8",
+    "svelte": "^5.55.5",
+    "svelte-check": "^4.4.7",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.10",
     "vite-plugin-devtools-json": "^1.0.0"
   },
   "keywords": [
     "svelte"
   ],
   "dependencies": {
-    "@lucide/svelte": "^1.8.0",
+    "@lucide/svelte": "^1.14.0",
     "@types/sortablejs": "^1.15.9",
     "runed": "^0.37.1",
     "sortablejs": "github:damix48/sortable",
-    "svelte-sonner": "^1.1.0",
+    "svelte-sonner": "^1.1.1",
     "svelte-toolbelt": "^0.10.6",
     "sveltekit-superforms": "^2.30.1"
   }

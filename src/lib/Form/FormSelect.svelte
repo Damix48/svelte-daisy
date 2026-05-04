@@ -1,24 +1,24 @@
 <script lang="ts" generics="TItem">
-  import { mergeProps } from "svelte-toolbelt";
-  import Select from "../Select/Select.svelte";
-  import type { SelectProps } from "../Select/types";
-  import { fieldContext, formContext } from "./context";
-  import type { HTMLInputAttributes } from "svelte/elements";
+import type { HTMLInputAttributes } from "svelte/elements";
+import { mergeProps } from "svelte-toolbelt";
+import Select from "../Select/Select.svelte";
+import type { SelectProps } from "../Select/types";
+import { fieldContext, formContext } from "./context";
 
-  const { form, constraints, errors, tainted } = formContext.get();
-  const { name, id } = fieldContext.get();
+const { form, constraints, errors, tainted } = formContext.get();
+const { name, id } = fieldContext.get();
 
-  type FormSelectProps = Omit<SelectProps<TItem>, "selectedItem" | "selectedItems">;
+type FormSelectProps = Omit<SelectProps<TItem>, "selectedItem" | "selectedItems">;
 
-  let { items, itemToId, itemToString, ...restProps }: FormSelectProps & Omit<HTMLInputAttributes, "id" | "name" | "value" | "type"> = $props();
+let { items, itemToId, itemToString, ...restProps }: FormSelectProps & Omit<HTMLInputAttributes, "id" | "name" | "value" | "type"> = $props();
 
-  const isValid = $derived((!$errors[name] || $errors[name][0] === undefined) && $tainted?.[name]);
+const isValid = $derived((!$errors[name] || $errors[name][0] === undefined) && $tainted?.[name]);
 
-  const _restProps = $derived(
-    mergeProps($constraints[name] ?? {}, restProps, {
-      class: `validator ${isValid ? "valid" : ""}`
-    })
-  );
+const _restProps = $derived(
+  mergeProps($constraints[name] ?? {}, restProps, {
+    class: `validator ${isValid ? "valid" : ""}`
+  })
+);
 </script>
 
 <Select

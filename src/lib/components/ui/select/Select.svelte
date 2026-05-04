@@ -1,8 +1,8 @@
 <script lang="ts" generics="TItem">
-  import { Dropdown } from "../dropdown";
-  import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
-  import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
-  import type { HTMLInputAttributes } from "svelte/elements";
+import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
+import type { HTMLInputAttributes } from "svelte/elements";
+import { Dropdown } from "../dropdown";
+import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
 
 let {
   type = "single",
@@ -49,7 +49,7 @@ const selectedItems = $derived.by((): TItem[] => {
   } else if (type === "single") {
     if (bindingType === "item") {
       return [selected as TItem];
-    } else {      
+    } else {
       const item = itemsMap.get(selected as string | number);
       return item ? [item] : [];
     }
@@ -83,11 +83,11 @@ function handleClick(item: TItem) {
     const isAlreadySelected = selectedIds.has(itemId);
 
     if (isAlreadySelected && allowDeselect) {
-      selected = undefined; 
+      selected = undefined;
     } else {
-      selected = itemValue; 
+      selected = itemValue;
     }
-    
+
     open = false;
   } else {
     // Multiple
@@ -185,7 +185,9 @@ let canCreate = $derived((createable === true || createable === "true") && searc
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 min-w-52 border-(length:--border) shadow-sm flex flex-col">
+  <Dropdown.Content
+    class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 min-w-52 border-(length:--border) shadow-sm flex flex-col"
+  >
     {#if searchable === true || searchable === "true"}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0 shrink-0">
         <Search size={16} class="shrink-0 text-(--input-color)" />

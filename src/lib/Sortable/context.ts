@@ -1,6 +1,6 @@
-import { Context } from "runed";
-import { SvelteMap } from "svelte/reactivity";
 import { fromAST } from "effect/JSONSchema";
+import { Context } from "runed";
+import type { SvelteMap } from "svelte/reactivity";
 
 export type SortableGroupContextType = {
   id: string;

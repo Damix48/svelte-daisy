@@ -1,9 +1,9 @@
 <script lang="ts" generics="TItem extends { children?: TItem[] }">
-  import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
-  import { Dropdown } from "../dropdown";
-  import type { TreeSelectProps } from "./types";
-  import type { HTMLInputAttributes } from "svelte/elements";
-  import { SvelteSet } from "svelte/reactivity";
+import { Check, ChevronRight, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
+import type { HTMLInputAttributes } from "svelte/elements";
+import { SvelteSet } from "svelte/reactivity";
+import { Dropdown } from "../dropdown";
+import type { TreeSelectProps } from "./types";
 
 type SelectionState = "none" | "some" | "all";
 type DisplayItem = {
@@ -35,7 +35,7 @@ let {
 
 let searchTerm = $state("");
 let open = $state(false);
-let expandedIds = new SvelteSet<string|number>();
+let expandedIds = new SvelteSet<string | number>();
 
 let searchBox: HTMLInputElement | undefined = $state(undefined);
 let highlightedIndex = $state(-1);
@@ -360,7 +360,9 @@ $effect(() => {
     <ChevronsUpDown size={16} class="shrink-0 text-(--input-color)" />
   </Dropdown.Trigger>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 min-w-52 border-(length:--border) shadow-sm flex flex-col">
+  <Dropdown.Content
+    class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 min-w-52 border-(length:--border) shadow-sm flex flex-col"
+  >
     {#if searchableEnabled}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0 shrink-0">
         <Search size={16} class="shrink-0 text-(--input-color)" />
@@ -389,7 +391,13 @@ $effect(() => {
         {@const isExpanded = effectiveExpandedIds.has(id)}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={state === "all"} class="scroll-my-16">
-          <button type="button" onclick={() => handleClick(node)} class="flex w-full min-w-0 items-center gap-2" class:menu-focus={i === highlightedIndex} style="padding-left: {node.level * 1.5 + 0.375}rem;">
+          <button
+            type="button"
+            onclick={() => handleClick(node)}
+            class="flex w-full min-w-0 items-center gap-2"
+            class:menu-focus={i === highlightedIndex}
+            style="padding-left: {node.level * 1.5 + 0.375}rem;"
+          >
             {#if node.hasChildren}
               <span
                 role="button"
@@ -407,7 +415,7 @@ $effect(() => {
               <span class="btn btn-square btn-ghost btn-xs invisible"></span>
             {/if}
 
-            <span role="button" class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left" >
+            <span role="button" class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-left">
               {#if itemTemplate}
                 <div class="min-w-0 flex-1 overflow-hidden">
                   {@render itemTemplate(node.item, state === "all")}

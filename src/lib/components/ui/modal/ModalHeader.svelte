@@ -1,17 +1,17 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { HTMLAttributes } from "svelte/elements";
-  import { mergeProps } from "svelte-toolbelt";
+import type { Snippet } from "svelte";
+import type { HTMLAttributes } from "svelte/elements";
+import { mergeProps } from "svelte-toolbelt";
 
-  type ModalHeaderProps = {
-    children?: Snippet | undefined;
-  };
+type ModalHeaderProps = {
+  children?: Snippet | undefined;
+};
 
-  let { children, ...restProps }: ModalHeaderProps & HTMLAttributes<HTMLDivElement> = $props();
+let { children, ...restProps }: ModalHeaderProps & HTMLAttributes<HTMLDivElement> = $props();
 
-  restProps = mergeProps(restProps, {
-    class: "mb-4"
-  });
+restProps = mergeProps(restProps, {
+  class: "mb-4"
+});
 </script>
 
 <div {...restProps}>

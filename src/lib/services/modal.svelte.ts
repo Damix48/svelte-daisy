@@ -1,8 +1,8 @@
-import { useId } from "$lib/utils/useId";
 import type { Component, ComponentProps } from "svelte";
 import { SvelteMap } from "svelte/reactivity";
 import { ConfirmModal, type ConfirmModalProps } from "$lib/components/functional/confirm-modal";
 import type { ModalContentProps } from "$lib/components/ui/modal";
+import { useId } from "$lib/utils/useId";
 
 type ModalInstance<T extends Component<any, any, any>> = {
   id: string;

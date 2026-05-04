@@ -1,6 +1,6 @@
 <script lang="ts">
-import { modalService } from "$lib/services/modal.svelte";
 import { Modal } from "$lib/components/ui/modal";
+import { modalService } from "$lib/services/modal.svelte";
 
 const { className }: { className?: string } = $props();
 </script>
