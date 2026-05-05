@@ -1,6 +1,7 @@
 <script lang="ts">
 import { RouteOff } from "@lucide/svelte";
 import { Dropdown, Modal, modalService } from "$lib";
+import Calendar from "$lib/components/ui/calendar/Calendar.svelte";
 import Select from "$lib/components/ui/select/Select.svelte";
 import TreeSelect from "$lib/components/ui/select/TreeSelect.svelte";
 import FormRoot from "$lib/Form/FormRoot.svelte";
@@ -74,7 +75,16 @@ const treeData: Node[] = [
 ];
 
 let selectedNodes: Node[] = $state([]);
+
+let date = $state(new Date());
+let range = $state({ start: new Date(), end: new Date() });
+
+$inspect(date);
+$inspect(range);
 </script>
+
+<Calendar type="single" bind:value={date} locale="it" numberOfMonths={2} />
+<Calendar type="range" bind:value={range} showMonthSelect showYearSelect />
 
 <Dropdown.Root>
   <Dropdown.Trigger class="btn">Open Dropdown</Dropdown.Trigger>
@@ -92,7 +102,7 @@ let selectedNodes: Node[] = $state([]);
 <TreeSelect items={treeData} itemToId={(x) => x.id} itemToString={(x) => x.name} bind:selected={selectedNodes} type="multiple" cascadeSelection selectionMode="any" />
 
 <Modal.Root>
-  <Modal.Trigger class="btn"> Open Modal</Modal.Trigger>
+  <Modal.Trigger class="btn">Open Modal</Modal.Trigger>
   <Modal.Content outsideBehavior="close" class="modal-fullscreen">
     <div class="modal-body">
       <p>Hello, I'm a modal!</p>
@@ -133,7 +143,18 @@ let selectedNodes: Node[] = $state([]);
   </Modal.Content>
 </Modal.Root>
 
-<button type="button" class="btn btn-primary" onclick={() => modalService.open(Ciao, {}, { outsideBehavior: "close-interact", position:"end" })}>Open popover</button>
+<button
+  type="button"
+  class="btn btn-primary"
+  onclick={() =>
+    modalService.open(
+      Ciao,
+      {},
+      { outsideBehavior: "close-interact", position: "end" },
+    )}
+>
+  Open popover
+</button>
 
 <button popovertarget="my_modal_1" class="btn">open modal</button>
 
@@ -141,7 +162,9 @@ let selectedNodes: Node[] = $state([]);
   <div class="modal-box">
     <h3 class="text-lg font-bold">Hello!</h3>
     <p class="py-4">Press ESC key or click below</p>
-    <div class="modal-action"><button class="btn" popovertarget="my_modal_1" popovertargetaction="hide">Close</button></div>
+    <div class="modal-action">
+      <button class="btn" popovertarget="my_modal_1" popovertargetaction="hide">Close</button>
+    </div>
   </div>
 </div>
 
