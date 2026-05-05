@@ -22,7 +22,6 @@ interface DaySnippetArgs {
 }
 
 interface CalendarCommonProps {
-  onValueChange?: (value: Date | Date[] | { start: Date; end: Date } | undefined) => void;
   placeholder?: Date;
   onPlaceholderChange?: (date: Date) => void;
   locale?: string;
@@ -48,14 +47,17 @@ type CalendarProps =
   | (CalendarCommonProps & {
       type?: "single";
       value?: Date | undefined;
+      onValueChange?: (value: Date | undefined) => void;
     })
   | (CalendarCommonProps & {
       type: "multiple";
       value?: Date[];
+      onValueChange?: (value: Date[] | undefined) => void;
     })
   | (CalendarCommonProps & {
       type: "range";
       value?: { start: Date; end: Date } | undefined;
+      onValueChange?: (value: { start: Date; end: Date } | undefined) => void;
     });
 
 // ============================================================
