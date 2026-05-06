@@ -14,5 +14,5 @@ export const Modal = {
   Footer
 };
 
-export { useModal } from "./context";
+export { useModal, useOptionalModal } from "./context";
 export type { ModalContentProps, ModalOutsideBehavior, ModalPosition } from "./types";
