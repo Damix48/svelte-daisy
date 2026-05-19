@@ -424,6 +424,12 @@ export function goToSelected() {
     }
   }
 }
+
+export function resetState() {
+  rangePhase = "idle";
+  rangeDraftStart = undefined;
+  rangeHoverDate = undefined;
+}
 </script>
 
 <div class="bg-base-100 rounded-box p-4 inline-block {className}" {...restProps}>

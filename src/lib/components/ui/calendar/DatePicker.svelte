@@ -1,4 +1,5 @@
 <script lang="ts">
+import { watch } from "runed";
 import { Dropdown } from "../dropdown";
 import Calendar from "./Calendar.svelte";
 import DatePickerInput from "./DatePickerInput.svelte";
@@ -66,6 +67,11 @@ function formatDisplayValue(val: typeof value): string {
   if (type === "range") {
     const r = val as { start: Date; end: Date } | undefined;
     if (!r) return "";
+
+    if (isSameDay(r.start, r.end)) {
+      return formatDate(r.start);
+    }
+
     return `${formatDate(r.start)} - ${formatDate(r.end)}`;
   }
   return "";
@@ -203,11 +209,15 @@ function handleFocus(e: FocusEvent): void {
   isEditing = true;
 }
 
-$effect(() => {
-  if (open && calendarRef) {
-    calendarRef.goToSelected();
+watch(
+  () => open,
+  () => {
+    if (open) {
+      calendarRef?.goToSelected();
+      calendarRef?.resetState();
+    }
   }
-});
+);
 </script>
 
 <Dropdown.Root {...restProps} bind:open>

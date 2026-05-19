@@ -79,9 +79,6 @@ let selectedNodes: Node[] = $state([]);
 
 let date = $state(new Date());
 let range = $state({ start: new Date(), end: new Date() });
-
-$inspect(date);
-$inspect(range);
 </script>
 
 <Calendar type="single" bind:value={date} locale="it" numberOfMonths={2} />
