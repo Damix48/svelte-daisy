@@ -2,6 +2,7 @@
 import { RouteOff } from "@lucide/svelte";
 import { Dropdown, Modal, modalService } from "$lib";
 import Calendar from "$lib/components/ui/calendar/Calendar.svelte";
+import DatePicker from "$lib/components/ui/calendar/DatePicker.svelte";
 import Select from "$lib/components/ui/select/Select.svelte";
 import TreeSelect from "$lib/components/ui/select/TreeSelect.svelte";
 import FormRoot from "$lib/Form/FormRoot.svelte";
@@ -85,6 +86,9 @@ $inspect(range);
 
 <Calendar type="single" bind:value={date} locale="it" numberOfMonths={2} />
 <Calendar type="range" bind:value={range} showMonthSelect showYearSelect />
+
+<DatePicker type="single" bind:value={date} locale="it" placeholder="Pick a date" />
+<DatePicker type="range" bind:value={range} showMonthSelect showYearSelect placeholder="Pick a range" />
 
 <Dropdown.Root>
   <Dropdown.Trigger class="btn">Open Dropdown</Dropdown.Trigger>

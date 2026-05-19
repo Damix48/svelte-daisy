@@ -1,64 +1,7 @@
 <script lang="ts">
 import { ChevronLeft, ChevronRight } from "@lucide/svelte";
-import type { Snippet } from "svelte";
-import type { ClassValue } from "svelte/elements";
 import "@formatjs/intl-locale/polyfill.js";
-
-// ============================================================
-// Types
-// ============================================================
-interface HeaderSnippetArgs {
-  goNext: () => void;
-  goPrev: () => void;
-  month: Date;
-  heading: string;
-}
-
-interface DaySnippetArgs {
-  date: Date;
-  selected: boolean;
-  today: boolean;
-  outside: boolean;
-}
-
-interface CalendarCommonProps {
-  placeholder?: Date;
-  onPlaceholderChange?: (date: Date) => void;
-  locale?: string;
-  weekStartsOn?: number;
-  weekdayFormat?: "narrow" | "short" | "long";
-  fixedWeeks?: boolean;
-  numberOfMonths?: number;
-  pagedNavigation?: boolean;
-  preventDeselect?: boolean;
-  isDateDisabled?: (date: Date) => boolean;
-  isDateUnavailable?: (date: Date) => boolean;
-  minValue?: Date;
-  maxValue?: Date;
-  showMonthSelect?: boolean;
-  showYearSelect?: boolean;
-  class?: ClassValue | null | undefined;
-  header?: Snippet<[HeaderSnippetArgs]>;
-  day?: Snippet<[DaySnippetArgs]>;
-  [rest: string]: unknown;
-}
-
-type CalendarProps =
-  | (CalendarCommonProps & {
-      type?: "single";
-      value?: Date | undefined;
-      onValueChange?: (value: Date | undefined) => void;
-    })
-  | (CalendarCommonProps & {
-      type: "multiple";
-      value?: Date[];
-      onValueChange?: (value: Date[] | undefined) => void;
-    })
-  | (CalendarCommonProps & {
-      type: "range";
-      value?: { start: Date; end: Date } | undefined;
-      onValueChange?: (value: { start: Date; end: Date } | undefined) => void;
-    });
+import type { CalendarProps } from "./types";
 
 // ============================================================
 // Props
@@ -316,13 +259,13 @@ function dayCellClasses(date: Date, monthValue: Date): string {
   const preview = rangePreviewBounds();
   if (preview) {
     if (isSameDay(preview.start, preview.end) && isSameDay(date, preview.start)) {
-      return `${classes} bg-base-content text-base-100 rounded-field`;
+      return `${classes} bg-primary text-base-100 rounded-field`;
     }
     if (isSameDay(date, preview.start)) {
-      return `${classes} bg-base-content text-base-100 rounded-l-field rounded-r-none`;
+      return `${classes} bg-primary text-base-100 rounded-l-field rounded-r-none`;
     }
     if (isSameDay(date, preview.end)) {
-      return `${classes} bg-base-content text-base-100 rounded-r-field rounded-l-none`;
+      return `${classes} bg-primary text-base-100 rounded-r-field rounded-l-none`;
     }
     if (isBetweenDay(date, preview.start, preview.end)) {
       return `${classes} bg-base-200 rounded-none`;
@@ -331,10 +274,10 @@ function dayCellClasses(date: Date, monthValue: Date): string {
 
   // Finalized range
   if (isFinalRangeStart(date)) {
-    return `${classes} bg-base-content text-base-100 rounded-l-field rounded-r-none`;
+    return `${classes} bg-primary text-base-100 rounded-l-field rounded-r-none`;
   }
   if (isFinalRangeEnd(date)) {
-    return `${classes} bg-base-content text-base-100 rounded-r-field rounded-l-none`;
+    return `${classes} bg-primary text-base-100 rounded-r-field rounded-l-none`;
   }
   if (isFinalRangeInner(date)) {
     return `${classes} bg-base-200 rounded-none`;
@@ -342,12 +285,12 @@ function dayCellClasses(date: Date, monthValue: Date): string {
 
   // Selected (single, multiple, or single-day range)
   if (sel) {
-    return `${classes} bg-base-content text-base-100 rounded-field`;
+    return `${classes} bg-primary text-base-100 rounded-field`;
   }
 
   // Today
   if (today) {
-    return `${classes} bg-primary text-primary-content rounded-field`;
+    return `${classes} bg-base-content text-base-100 rounded-field`;
   }
 
   // Outside month (not disabled, not unavailable)
@@ -457,12 +400,36 @@ function handleDayMouseLeave() {
     rangeHoverDate = undefined;
   }
 }
+
+export function goToSelected() {
+  if (type === "single") {
+    const v = value as Date | undefined;
+    if (v) {
+      placeholder = new Date(v.getFullYear(), v.getMonth(), 1);
+      onPlaceholderChange?.(placeholder);
+    }
+  } else if (type === "multiple") {
+    const arr = value as Date[] | undefined;
+    if (arr && arr.length > 0) {
+      const v = arr[0];
+      placeholder = new Date(v.getFullYear(), v.getMonth(), 1);
+      onPlaceholderChange?.(placeholder);
+    }
+  } else if (type === "range") {
+    const r = value as { start: Date; end: Date } | undefined;
+    if (r) {
+      const v = r.start;
+      placeholder = new Date(v.getFullYear(), v.getMonth(), 1);
+      onPlaceholderChange?.(placeholder);
+    }
+  }
+}
 </script>
 
 <div class="bg-base-100 rounded-box p-4 inline-block {className}" {...restProps}>
   <div class="flex gap-4">
     {#each visibleMonths as month, i (`m-${month.value.toISOString()}`)}
-      <div class="w-72">
+      <div class="w-auto">
         <!-- ============================================ -->
         <!-- Header                                      -->
         <!-- ============================================ -->

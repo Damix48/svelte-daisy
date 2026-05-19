@@ -34,7 +34,7 @@ export function lucideSvelteImportOptimizer(): Plugin {
               .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
               .replace(/([a-zA-Z])([0-9]+)/g, "$1-$2")
               .toLowerCase();
-            runtimeImports.push(`${whitespace}import ${alias ? `${name} as ${alias}` : name} from '@lucide/svelte/icons/${path}'${hasSemi ? ";" : ""}`);
+            runtimeImports.push(`${whitespace}import ${alias || name} from '@lucide/svelte/icons/${path}'${hasSemi ? ";" : ""}`);
           }
         }
 
