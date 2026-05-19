@@ -56,7 +56,7 @@ const defaultFormatOptions: Intl.DateTimeFormatOptions = { year: "numeric", mont
 const formatter = $derived(new Intl.DateTimeFormat(locale, dateFormat ?? defaultFormatOptions));
 
 function formatDate(date: Date | undefined): string {
-  if (!date) return "";
+  if (!date || isNaN(date.getTime())) return "";
   return formatter.format(date);
 }
 
