@@ -138,9 +138,10 @@ function commitValue() {
     if (parsed) {
       value = parsed;
       onValueChange?.(parsed);
-    } else if (textValue.trim() === "" && !preventDeselect) {
-      value = undefined;
-      onValueChange?.(undefined);
+    } else if (textValue.trim() === "") {
+      const today = new Date();
+      value = today;
+      onValueChange?.(today);
     }
   } else if (type === "range") {
     const parsed = parseRange(textValue);
@@ -148,8 +149,10 @@ function commitValue() {
       value = parsed;
       onValueChange?.(parsed);
     } else if (textValue.trim() === "") {
-      value = undefined;
-      onValueChange?.(undefined);
+      const today = new Date();
+      const range = { start: today, end: today };
+      value = range;
+      onValueChange?.(range);
     }
   }
   isEditing = false;
