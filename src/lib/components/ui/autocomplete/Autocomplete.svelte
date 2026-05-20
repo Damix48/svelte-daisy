@@ -146,7 +146,7 @@ const filteredItems = $derived.by(() => {
     {#if loading}
       <LoaderCircle size={16} class="shrink-0 animate-spin text-(--input-color)" />
     {/if}
-    {#if value}
+    <!-- {#if value}
       <button
         type="button"
         class="shrink-0 self-stretch flex items-center justify-end min-w-8 disabled:opacity-40 focus-visible:outline-0 touch-hitbox"
@@ -155,7 +155,7 @@ const filteredItems = $derived.by(() => {
       >
         <X size={16} class="text-(--input-color)" />
       </button>
-    {/if}
+    {/if} -->
     <button
       type="button"
       class="shrink-0 self-stretch flex items-center justify-end min-w-8 ps-1 disabled:opacity-40 focus-visible:outline-0 touch-hitbox"
