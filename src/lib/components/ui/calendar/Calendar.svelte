@@ -44,6 +44,10 @@ let rangeHoverDate = $state<Date | undefined>(undefined);
 
 const weekStart = $derived(weekStartsOn && weekStartsOn >= 0 ? weekStartsOn : Number(new Intl.Locale(locale).getWeekInfo().firstDay));
 
+function isValidDate(d: unknown): d is Date {
+  return d instanceof Date && !isNaN(d.getTime());
+}
+
 function isSameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
@@ -240,7 +244,7 @@ function dayCellClasses(date: Date, monthValue: Date): string {
   const sel = isDateSelected(date);
 
   // Base
-  let classes = "size-10 grid place-items-center text-sm";
+  let classes = "h-10 w-full grid place-items-center text-sm";
 
   // Disabled
   if (disabled) {
@@ -432,10 +436,10 @@ export function resetState() {
 }
 </script>
 
-<div class="bg-base-100 rounded-box p-4 inline-block {className}" {...restProps}>
-  <div class="flex gap-4">
+<div class="bg-base-100 w-full rounded-box p-4 inline-block {className}" {...restProps}>
+  <div class="flex gap-4 w-full">
     {#each visibleMonths as month, i (`m-${month.value.toISOString()}`)}
-      <div class="w-auto">
+      <div class="w-full">
         <!-- ============================================ -->
         <!-- Header                                      -->
         <!-- ============================================ -->
@@ -505,7 +509,7 @@ export function resetState() {
           <!-- Weekday headers -->
           <div class="flex">
             {#each weekdays as day}
-              <span class="text-base-content/50 text-xs flex items-center justify-center size-10"> {day} </span>
+              <span class="text-base-content/50 text-xs flex items-center justify-center h-10 w-full"> {day} </span>
             {/each}
           </div>
 
