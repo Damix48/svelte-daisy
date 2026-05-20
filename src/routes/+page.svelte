@@ -8,6 +8,7 @@ import TreeSelect from "$lib/components/ui/select/TreeSelect.svelte";
 import Autocomplete from "$lib/components/ui/autocomplete/Autocomplete.svelte";
 import FormRoot from "$lib/Form/FormRoot.svelte";
 import Ciao from "./ciao.svelte";
+import { useDebounce } from "runed";
 
 type User = { id: number; name: string };
 let users: User[] = [
@@ -96,25 +97,9 @@ type PhotonFeature = {
 let placeText = $state("");
 
 let searchTimer: ReturnType<typeof setTimeout>;
-function searchPlace(q: string): Promise<PhotonFeature[]> {
-  clearTimeout(searchTimer);
-  return new Promise((resolve) => {
-    searchTimer = setTimeout(async () => {
-      if (q.length < 2) {
-        resolve([]);
-        return;
-      }
-      try {
-        const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=5`);
-        const data = await res.json();
-
-        console.log(data);
-        resolve(data.features ?? []);
-      } catch {
-        resolve([]);
-      }
-    }, 300);
-  });
+async function searchPlace(q: string): Promise<PhotonFeature[]> {
+  const results = await search(q);
+  return results;
 }
 
 function photonToString(p: PhotonFeature): string {
@@ -122,6 +107,20 @@ function photonToString(p: PhotonFeature): string {
   const parts = [props.name, props.city, props.state, props.country].filter(Boolean);
   return parts.join(", ");
 }
+
+const search = async (query: string) => {
+  console.log("Searching for", query);
+  if (!query) return [];
+
+  const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&lang=en`);
+  const data = await response.json();
+
+  console.log(data);
+
+  return data.features as PhotonFeature[];
+};
+
+search("test");
 </script>
 
 <Calendar type="single" bind:value={date} locale="it" numberOfMonths={2} />
@@ -216,7 +215,7 @@ function photonToString(p: PhotonFeature): string {
 {acText}
 
 <Autocomplete
-  search={searchPlace}
+  {search}
   bind:value={placeText}
   itemToId={(x) => x.properties.osm_id}
   itemToString={photonToString}

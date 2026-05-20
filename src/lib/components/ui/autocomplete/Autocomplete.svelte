@@ -3,10 +3,12 @@ import { ChevronsUpDown, LoaderCircle, Search, X } from "@lucide/svelte";
 import type { HTMLInputAttributes } from "svelte/elements";
 import { Dropdown } from "../dropdown";
 import type { Snippet } from "svelte";
+import { Debounced, useDebounce } from "runed";
 
 let {
   items = [],
   search,
+  debounce = 0,
   value = $bindable(undefined),
   itemToString = (item: TItem) => (item == null ? "" : String(item)),
   itemToId = (item: TItem) => (item == null ? "" : String(item)),
@@ -18,7 +20,8 @@ let {
   ...restProps
 }: {
   items?: TItem[];
-  search?: (query: string) => Promise<TItem[]>;
+  search?: ((query: string) => Promise<TItem[]>) | ((query: string) => TItem[]);
+  debounce?: number;
   value?: string;
   onValueChange?: (value: string) => void;
   itemToString?: (item: TItem) => string;
@@ -40,18 +43,14 @@ let highlightedIndex = $state(-1);
 let inputEl: HTMLInputElement | undefined = $state(undefined);
 let listboxEl: HTMLUListElement | undefined = $state(undefined);
 let itemElements: HTMLLIElement[] = $state([]);
-let isFocused = $state(false);
-let internalChange = $state(false);
 
 function fillValue(item: TItem) {
-  internalChange = true;
   value = itemToString(item);
   open = false;
   highlightedIndex = -1;
 }
 
 function clearValue() {
-  internalChange = true;
   value = undefined;
   open = false;
   highlightedIndex = -1;
@@ -106,16 +105,21 @@ function handleBlur(event: FocusEvent) {
   }
 }
 
+const debounced = new Debounced(
+  () => value,
+  () => debounce
+);
+
 const filteredItems = $derived.by(() => {
-  if (!value) return Promise.resolve(items);
+  if (!debounced.current) return Promise.resolve(items);
 
   if (!search) {
-    const lowerTerm = value.trim().toLowerCase();
+    const lowerTerm = debounced.current.trim().toLowerCase();
 
     return Promise.resolve(items.filter((item) => itemToString(item).trim().toLowerCase().includes(lowerTerm)));
   }
 
-  return search(value);
+  return search(debounced.current);
 });
 </script>
 
@@ -203,6 +207,7 @@ const filteredItems = $derived.by(() => {
           {/each}
         {/if}
       {:catch error}
+        {error}
         <li class="menu-disabled"><span>Error loading results</span></li>
       {/await}
     </ul>
