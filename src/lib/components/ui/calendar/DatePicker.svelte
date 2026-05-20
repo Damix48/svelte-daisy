@@ -1,16 +1,34 @@
 <script lang="ts">
 import { watch } from "runed";
+import type { Snippet } from "svelte";
+import type { ClassValue } from "svelte/elements";
 import { Dropdown } from "../dropdown";
 import Calendar from "./Calendar.svelte";
 import DatePickerInput from "./DatePickerInput.svelte";
-import type { CalendarCommonProps, SingleValue, RangeValue } from "./types";
+import type { SingleValue, RangeValue, HeaderSnippetArgs, DaySnippetArgs } from "./types";
 
-type DatePickerProps = CalendarCommonProps & {
+type DatePickerProps = {
   type?: "single" | "range";
   value?: SingleValue | RangeValue;
   placeholder?: string;
   dateFormat?: Intl.DateTimeFormatOptions;
   onValueChange?: (value: SingleValue | RangeValue) => void;
+  locale?: string;
+  weekStartsOn?: number;
+  weekdayFormat?: "narrow" | "short" | "long";
+  fixedWeeks?: boolean;
+  numberOfMonths?: number;
+  pagedNavigation?: boolean;
+  preventDeselect?: boolean;
+  isDateDisabled?: (date: Date) => boolean;
+  isDateUnavailable?: (date: Date) => boolean;
+  minValue?: Date;
+  maxValue?: Date;
+  showMonthSelect?: boolean;
+  showYearSelect?: boolean;
+  class?: ClassValue | undefined;
+  header?: Snippet<[HeaderSnippetArgs]>;
+  day?: Snippet<[DaySnippetArgs]>;
 };
 
 // ============================================================

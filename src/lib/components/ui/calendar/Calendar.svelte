@@ -146,9 +146,11 @@ const monthNames = $derived.by(() => Array.from({ length: 12 }, (_, i) => monthF
 const currentYear = $derived(new Date().getFullYear());
 const yearRange = $derived(Array.from({ length: 21 }, (_, i) => currentYear - 10 + i));
 
+const safePlaceholder = $derived(isValidDate(placeholder) ? placeholder : new Date());
+
 const visibleMonths = $derived(
   Array.from({ length: numberOfMonths }, (_, i) => {
-    const monthDate = addMonths(placeholder, i);
+    const monthDate = addMonths(safePlaceholder, i);
     return {
       value: new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
       heading: headingFormatter.format(monthDate),
@@ -408,20 +410,20 @@ function handleDayMouseLeave() {
 export function goToSelected() {
   if (type === "single") {
     const v = value as Date | undefined;
-    if (v) {
+    if (isValidDate(v)) {
       placeholder = new Date(v.getFullYear(), v.getMonth(), 1);
       onPlaceholderChange?.(placeholder);
     }
   } else if (type === "multiple") {
     const arr = value as Date[] | undefined;
-    if (arr && arr.length > 0) {
+    if (arr && arr.length > 0 && isValidDate(arr[0])) {
       const v = arr[0];
       placeholder = new Date(v.getFullYear(), v.getMonth(), 1);
       onPlaceholderChange?.(placeholder);
     }
   } else if (type === "range") {
     const r = value as { start: Date; end: Date } | undefined;
-    if (r) {
+    if (r && isValidDate(r.start)) {
       const v = r.start;
       placeholder = new Date(v.getFullYear(), v.getMonth(), 1);
       onPlaceholderChange?.(placeholder);
