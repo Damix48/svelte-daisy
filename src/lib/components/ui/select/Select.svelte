@@ -215,7 +215,11 @@ let canCreate = $derived((createable === true || createable === "true") && searc
         {@const isSelected = selectedIds.has(itemToId(item))}
 
         <li bind:this={itemElements[i]} role="option" aria-selected={isSelected} class="scroll-my-16">
-          <button type="button" class:menu-focus={i === highlightedIndex} class="flex min-w-0 items-center gap-2 overflow-hidden text-left" onclick={() => handleClick(item)}>
+          <button
+            type="button"
+            class={["flex w-full min-w-0 items-center gap-2 overflow-hidden text-left", i === highlightedIndex && "menu-focus"]}
+            onclick={() => handleClick(item)}
+          >
             {#if itemTemplate}
               <div class="min-w-0 flex-1 overflow-hidden">
                 {@render itemTemplate(item, isSelected)}

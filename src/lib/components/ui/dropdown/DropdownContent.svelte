@@ -12,7 +12,7 @@ type DropdownContentProps = {
   children?: Snippet | undefined;
 };
 
-let { children, ...restProps }: DropdownContentProps & Omit<HTMLAttributes<HTMLDivElement>, "id" | "popovertarget" | "popover" | "popovertargetaction" | "ontoggle" | "onclose"> =
+let { children, popover, ...restProps }: DropdownContentProps & Omit<HTMLAttributes<HTMLDivElement>, "id" | "popovertarget" | "popovertargetaction" | "ontoggle" | "onclose"> =
   $props();
 
 restProps = mergeProps(restProps, {
@@ -28,7 +28,7 @@ $effect(() => {
 <div
   bind:this={popoverRef}
   id="popover-{c.id}"
-  popover="auto"
+  popover={popover ?? "auto"}
   ontoggle={({ newState }) => {
     c.open = newState === "open";
   }}

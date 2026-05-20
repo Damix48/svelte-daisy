@@ -1,3 +1,4 @@
+export * from "./autocomplete";
 export * from "./calendar";
 export * from "./dropdown";
 export * from "./input-number";

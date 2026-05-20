@@ -5,6 +5,7 @@ import Calendar from "$lib/components/ui/calendar/Calendar.svelte";
 import DatePicker from "$lib/components/ui/calendar/DatePicker.svelte";
 import Select from "$lib/components/ui/select/Select.svelte";
 import TreeSelect from "$lib/components/ui/select/TreeSelect.svelte";
+import Autocomplete from "$lib/components/ui/autocomplete/Autocomplete.svelte";
 import FormRoot from "$lib/Form/FormRoot.svelte";
 import Ciao from "./ciao.svelte";
 
@@ -79,12 +80,54 @@ let selectedNodes: Node[] = $state([]);
 
 let date = $state(new Date());
 let range = $state({ start: new Date(), end: new Date() });
+let acText = $state("");
+
+type PhotonFeature = {
+  properties: {
+    name: string;
+    country?: string;
+    state?: string;
+    city?: string;
+    osm_key: string;
+    osm_id: number;
+  };
+  geometry: { coordinates: [number, number] };
+};
+let placeText = $state("");
+
+let searchTimer: ReturnType<typeof setTimeout>;
+function searchPlace(q: string): Promise<PhotonFeature[]> {
+  clearTimeout(searchTimer);
+  return new Promise((resolve) => {
+    searchTimer = setTimeout(async () => {
+      if (q.length < 2) {
+        resolve([]);
+        return;
+      }
+      try {
+        const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=5`);
+        const data = await res.json();
+
+        console.log(data);
+        resolve(data.features ?? []);
+      } catch {
+        resolve([]);
+      }
+    }, 300);
+  });
+}
+
+function photonToString(p: PhotonFeature): string {
+  const props = p.properties;
+  const parts = [props.name, props.city, props.state, props.country].filter(Boolean);
+  return parts.join(", ");
+}
 </script>
 
 <Calendar type="single" bind:value={date} locale="it" numberOfMonths={2} />
 <Calendar type="range" bind:value={range} showMonthSelect showYearSelect />
 
-<DatePicker type="single" bind:value={date} locale="it" placeholder="Pick a date" />
+<DatePicker type="single" bind:value={date} locale="it" placeholder="Pick a date" class="w-100" />
 <DatePicker type="range" bind:value={range} showMonthSelect showYearSelect placeholder="Pick a range" />
 
 <Dropdown.Root>
@@ -168,6 +211,19 @@ let range = $state({ start: new Date(), end: new Date() });
     </div>
   </div>
 </div>
+
+<Autocomplete items={users} bind:value={acText} itemToId={(x) => x.id} itemToString={(x) => x.name} placeholder="Search users..." />
+{acText}
+
+<Autocomplete
+  search={searchPlace}
+  bind:value={placeText}
+  itemToId={(x) => x.properties.osm_id}
+  itemToString={photonToString}
+  placeholder="Search places (photon.komoot.io)..."
+  minSearchLength={2}
+/>
+{placeText}
 
 <!-- 1. DEFAULTS -->
 <!-- ✅ Valid: Infers type="single", bindingType="item". Expects User. -->
