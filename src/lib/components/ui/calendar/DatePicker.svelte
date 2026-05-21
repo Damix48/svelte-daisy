@@ -244,9 +244,7 @@ watch(
 <Dropdown.Root {...restProps} bind:open>
   <DatePickerInput bind:value={textValue} {placeholder} class={className} oninput={handleInput} onblur={handleBlur} onkeydown={handleKeyDown} onfocus={handleFocus} />
 
-  <Dropdown.Content
-    class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 border-(length:--border) shadow-sm flex justify-center-safe"
-  >
+  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size mt-1 border-(length:--border) shadow-sm flex justify-center-safe">
     <Calendar
       bind:this={calendarRef}
       {type}
