@@ -10,6 +10,7 @@ let {
   search,
   debounce = 0,
   value = $bindable(undefined),
+  onItemSelected,
   itemToString = (item: TItem) => (item == null ? "" : String(item)),
   itemToId = (item: TItem) => (item == null ? "" : String(item)),
   itemTemplate,
@@ -23,7 +24,7 @@ let {
   search?: ((query: string) => Promise<TItem[]>) | ((query: string) => TItem[]);
   debounce?: number;
   value?: string;
-  onValueChange?: (value: string) => void;
+  onItemSelected?: (item: TItem) => void;
   itemToString?: (item: TItem) => string;
   itemToId?: (item: TItem) => string | number;
   itemTemplate?: Snippet<[TItem]>;
@@ -48,6 +49,7 @@ function fillValue(item: TItem) {
   value = itemToString(item);
   open = false;
   highlightedIndex = -1;
+  onItemSelected?.(item);
 }
 
 function clearValue() {
