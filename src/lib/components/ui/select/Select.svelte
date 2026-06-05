@@ -186,7 +186,7 @@ let canCreate = $derived((createable === true || createable === "true") && searc
   </Dropdown.Trigger>
 
   <Dropdown.Content
-    class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 min-w-52 border-(length:--border) shadow-sm flex flex-col"
+    class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size mt-1 min-w-52 border-(length:--border) shadow-sm flex flex-col"
   >
     {#if searchable === true || searchable === "true"}
       <label class="input input-ghost w-full focus-within:outline-0 focus:outline-0 shrink-0">

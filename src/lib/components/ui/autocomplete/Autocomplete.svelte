@@ -169,7 +169,7 @@ const filteredItems = $derived.by(() => {
     </button>
   </div>
 
-  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size max-sm:dropdown-sheet mt-1 border-(length:--border) shadow-sm" popover="manual">
+  <Dropdown.Content class="bg-base-100 border-base-content/20 rounded-field dropdown-auto-size mt-1 border-(length:--border) shadow-sm" popover="manual">
     <ul
       bind:this={listboxEl}
       class="menu max-h-96 w-full flex-nowrap overflow-y-auto overscroll-contain"
