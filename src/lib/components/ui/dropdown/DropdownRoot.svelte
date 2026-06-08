@@ -29,6 +29,6 @@ const state = {
 context.set(state);
 </script>
 
-<div style="anchor-scope: --popover; display: contents;" aria-invalid={ariaInvalid} class:validator={className?.includes("validator")}>
+<div style="anchor-scope: --popover; display: grid;" aria-invalid={ariaInvalid} class:validator={className?.includes("validator")}>
   {@render children?.()}
 </div>
