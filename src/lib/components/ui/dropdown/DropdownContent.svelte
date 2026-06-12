@@ -20,8 +20,12 @@ restProps = mergeProps(restProps, {
 });
 
 $effect(() => {
-  if (c.open) popoverRef.showPopover();
-  else popoverRef.hidePopover();
+  const isOpen = popoverRef?.matches(':popover-open');
+  if (c.open && !isOpen) {
+    popoverRef.showPopover();
+  } else if (!c.open && isOpen) {
+    popoverRef.hidePopover();
+  }
 });
 </script>
 
@@ -30,7 +34,10 @@ $effect(() => {
   id="popover-{c.id}"
   popover={popover ?? "auto"}
   ontoggle={({ newState }) => {
-    c.open = newState === "open";
+    const shouldBeOpen = newState === "open";
+    if (c.open !== shouldBeOpen) {
+      c.open = shouldBeOpen;
+    }
   }}
   {...restProps}
 >
