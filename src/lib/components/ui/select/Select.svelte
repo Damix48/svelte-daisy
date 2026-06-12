@@ -1,5 +1,6 @@
 <script lang="ts" generics="TItem">
 import { Check, ChevronsUpDown, Plus, Search } from "@lucide/svelte";
+import { tick } from "svelte";
 import type { HTMLInputAttributes } from "svelte/elements";
 import { Dropdown } from "../dropdown";
 import type { SelectBindingType, SelectProps, SelectSelectionMode } from "./types";
@@ -82,13 +83,17 @@ function handleClick(item: TItem) {
   if (type === "single") {
     const isAlreadySelected = selectedIds.has(itemId);
 
-    if (isAlreadySelected && allowDeselect) {
-      selected = undefined;
-    } else {
-      selected = itemValue;
-    }
-
     open = false;
+
+    tick().then(() => {
+      if (isAlreadySelected && allowDeselect) {
+        selected = undefined;
+      } else {
+        selected = itemValue;
+      }
+
+      if (!keepSearchTermOnClose) searchTerm = "";
+    });
   } else {
     // Multiple
     const currentSelected = Array.isArray(selected) ? selected : [];
@@ -111,8 +116,6 @@ function handleClick(item: TItem) {
     selected = newSelection;
   }
 
-  // Reset search
-  if (!keepSearchTermOnClose && type === "single") searchTerm = "";
 }
 
 function handleCreate() {
